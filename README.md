@@ -98,31 +98,21 @@ Jenkins 를 사용하는 이유 :
 
 #### Required
 
-- [x] [Your Spring Boot Application](https://jenkins.io/)
+- [x] [Your Spring Boot Application](https://github.com/warumono-for-develop/spring-boot-restful-api-template)
 
-  version 1.0.0-Snapshot
+- [x] [Docker Installation Tutorial](https://github.com/warumono-for-develop/docker-installation-tutorial)
+
+- [x] [Jenkins Installation Tutorial](https://github.com/warumono-for-develop/jenkins-installation-tutorial)
 
 - [x] [GitHub](https://github.com/)
-
-  Docker version 19.03.6
   
-- [x] [Docker](https://www.docker.com/)
-
-  Docker version 19.03.6
-
-- [x] [Jenkins](https://jenkins.io/)
-
-  Docker version 19.03.6
-  
-  [Docker Installation Tutorial](https://github.com/warumono-for-develop/docker-installation-tutorial)
-
 - [x] [AWS](https://aws.amazon.com/ko/) EC2 Instance
 
   \[Free tier\] Ubuntu Server 18.04 LTS (HVM), SSD Volume Type
 
-- [ ] [Jupyter Notebook](https://jupyter.org/)
+#### Optional
 
-  [Jupyter Notebook Installation Tutorial](https://github.com/warumono-for-develop/jupyter-notebook-installation-tutorial)
+- [ ] [Jupyter Notebook Installation Tutorial](https://github.com/warumono-for-develop/jupyter-notebook-installation-tutorial)
 
 
 
@@ -132,7 +122,7 @@ Jenkins 를 사용하는 이유 :
 
 ## Preview
 
-**Spring Boot Application** <--- `Git` ---> **GitHub** <--- `Docker` ---> **Docker Hub** <---> **Jenkins**
+**Spring Boot Application** <--- `Git` ---> **GitHub** <--- `Docker` ---> **Docker Hub** <--- `Webhook` ---> **Jenkins**
 
 
 
@@ -178,11 +168,76 @@ AWS EC2 인스턴스의 상세 정보 중 **Private IPs**
 your-terminal> ifconfig
 ```
 
-### Installation
+### Configuration
 
-#### Step 1
+#### Jenkins
 
-##### Jenkins 설치
+##### [CloudBees Docker Hub/Registry Notification 2.4.0](https://plugins.jenkins.io/dockerhub-notification/) 플러그인 설치
+
+`Jenkins 대시보드` 화면에서 왼쪽 메뉴 중 `Manage Jenkins` 선택하여 `Manage Jenkins` 화면으로 이동
+
+메뉴 목록 중 `Manage Plugins` 선택하여 화면 이동 후 오른쪽 상단 검색 입력 창에 `CloudBees` 입력 조회
+
+`CloudBees Docker Hub/Registry Notification` 선택 설치 후, Jenkins 재가동
+
+##### job Build Trigger 설정
+
+아래 설정에 따라 Docker Hub 에서 임의의 repository 를 이미지로 만들어 등록이 완료되면 Jenkins 는 Notification 을 감지하고 **자동으로 임의의 작업 실행**
+
+`Jenkins 대시보드` 화면에서 오른쪽 임의의 job Name 을 선택하여 Project {your-job-name} 화면으로 이동하여 왼쪽 메뉴 중 Configure 선택
+
+Build Trigger 섹션에서 
+
+- [ ] `GitHub hook trigger for GITScm polling` 항목 체크박스 비활성화(해제)
+
+*`GitHub hook trigger for GITScm polling` 은 GitHub 으로 push 되면 Jenkins 의 Webhook 에 의해 임의의 작업을 하는 것으로*
+
+*본 작업에서는 불필요한 작업이므로 비활성화 함*
+
+- [x] `Monitor Docker Hub/Registry for image changes` 항목 체크박스 활성화
+
+- [x] `Any referenced Docker image can trigger this job` 항목 체크박스 활성화
+
+- [x] `Specified repositories will trigger this job` 항목 체크박스 활성화
+
+Repositories 입력 창에 `{your-docker-image-name}` 입력
+
+###### job Build Execute shell 설정
+
+기존 Shell Script 가 존재한다면모두 삭제하고, 새롭게 작성
+
+docker rm -f `{your-docker-container-name}` || true
+
+*기존에 {your-docker-container-name} 이 구동되고 있다면 강제로 삭제*
+
+*<strong>최초 실행(docker run)시 해당 컨테이너는 존재하지 않아 빌드가 실패</strong>하는 것을 방지하기 위하여 **_`|| true`_** 구문을 넣어 정상적으로 진행 되도록 처리*
+
+docker pull `{your-docker-image-name}`
+
+docker run -d -p `{your-aws-ec2-port}`:`{your-application-port}` --name `{your-docker-container-name}` `{your-docker-image-name}`
+
+|변수|설명|예시|비고|
+|---|---|---|---|
+|your-docker-container-name|Docker 컨테이너 이름|spring-boot-restful-api-server-repository|Docker 실행(run) 명령어에서 지정하는 이름|
+|your-docker-image-name|Docker 이미지 이름|warumono/spring-boot-restful-api-server|비고|
+|your-aws-ec2-public-port|호스트 접근 PORT|8080|외부에서 접근하는 PORT 로 내부 어플리케이션 접근 PORT 와 동일하게 지정. 반드시 동일하지 않아도 무관.|
+|your-application-port|어플리케이션 접근 PORT|8080|어플리케이션 개발 시 설정된 PORT|
+
+```sh
+docker rm -f spring-boot-restful-api-server-repository || true
+
+docker pull warumono/spring-boot-restful-api-server
+
+docker run -d -p 8080:8080 --name spring-boot-restful-api-server-repository warumono/spring-boot-restful-api-server
+```
+
+###### 새로운 job 을 생성
+
+
+
+
+
+##### GitHub Repository Deploy Key 생성
 
 Docker 명령어로 jenkins 키워드로 이미지 검색을 해보면 많은 이미지들이 조회 됨
 
