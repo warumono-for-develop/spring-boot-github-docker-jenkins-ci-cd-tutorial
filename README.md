@@ -190,9 +190,9 @@ Build Trigger 섹션에서
 
 - [ ] `GitHub hook trigger for GITScm polling` 항목 체크박스 비활성화(해제)
 
-*`GitHub hook trigger for GITScm polling` 은 GitHub 으로 push 되면 Jenkins 의 Webhook 에 의해 임의의 작업을 하는 것으로*
+    *`GitHub hook trigger for GITScm polling` 은 GitHub 으로 push 되면 Jenkins 의 Webhook 에 의해 임의의 작업을 하는 것으로*
 
-*본 작업에서는 불필요한 작업이므로 비활성화 함*
+    *본 작업에서는 불필요한 작업이므로 비활성화 함*
 
 - [x] `Monitor Docker Hub/Registry for image changes` 항목 체크박스 활성화
 
@@ -200,7 +200,7 @@ Build Trigger 섹션에서
 
 - [x] `Specified repositories will trigger this job` 항목 체크박스 활성화
 
-Repositories 입력 창에 `{your-docker-image-name}` 입력
+`Repositories` 입력 창에 `{your-docker-image-name}` 입력
 
 ###### job Build Execute shell 설정
 
@@ -231,10 +231,79 @@ docker pull warumono/spring-boot-restful-api-server
 docker run -d -p 8080:8080 --name spring-boot-restful-api-server-repository warumono/spring-boot-restful-api-server
 ```
 
-###### 새로운 job 을 생성
+#### Docker Hub
 
+##### Webhook 설정
 
+`{your-docker-repository} 대시보드` 화면에서 `Webhooks 탭` 화면으로 이동
 
+`Webhook name` 입력 창에 `{your-webhook-name}`
+
+`Webhook URL` `http://{your-aws-ec2-public-ip}:{your-jenkins-port}/dockerhub-webhook/notify`
+
+|변수|설명|예시|비고|
+|---|---|---|---|
+|your-webhook-name|Docker Hub 에서 구분하기 위한 Webhook 이름|spring-boot-restful-api-server-dockerhub|비고|
+|your-aws-ec2-public-ip|AWS EC2 Public IP|54.180.113.162|비고|
+|your-jenkins-port|설명|예시|비고|
+
+```sh
+spring-boot-restful-api-server-dockerhub
+
+http://55.237.111.121:8090/dockerhub-webhook/notify
+```
+
+##### Dockerfile Build rule 설정 (Optional GitHub repository 내의 Dockerfile 을 인식 못하는 경우)
+
+`{your-docker-repository} 대시보드` 화면에서 `Build 탭` 화면으로 이동
+
+화면 오른쪽 위 `Configure Automated Builds` 버튼 클릭하여 `Build configurations` 화면으로 이동하여 화면 아래 부분의 `BUILD RULES` 섹션에서 `BUILD RULES` 섹션 이름 옆 `+` 버튼을 클릭하여 입력 창들이 나타남
+
+그 중 `Build Context` 의 기본 값 `/` 즉, Dockerfile 위치가 GitHub repository 파일 구조가 프로젝트 루드 폴더로 시작하는 구조가 아닌 프로젝트 루트 폴더 내부의 파일들로 시작하는 구조인 상태의 경로가 `Build Context` 의 기본 값 `/` 을 가리킴
+
+GitHub repository 파일 구조가 프로젝트 루드 폴더로 시작하는 구조
+
+**이 경우에는 `Build Context` 를 `/YourProjectFolder/` 로 입력**
+
+```
+YourProjectFolder
+...
+LISENSE
+README.md
+```
+
+GitHub repository 파일 구조가 프로젝트 루트 폴더 내부의 파일들로 시작하는 구조
+
+**이 경우에는 `Build Context` 기본 값 `/` 사용 또는 입력**
+
+```
+binFolder
+gradle/wrapperFolder
+srcFolder
+.gitignore
+...
+Dockerfile
+...
+build.gradle
+...
+settings.gradle
+LISENSE
+README.md
+```
+
+GitHub repository 파일 구조가 프로젝트 루드 폴더로 시작하는 구조하고 Dockerfile 이 / 위치에 있는 경우에도 정상적으로 진행되지 않는 것으로 판단됨
+
+인위적으로 이러한 구조를 만들어 진행하였지만 우선을 Docker Hub 에서는 인식을 못하고 빌드 자체를 진행하지 않았음
+
+단, 그 당시 `Build Context` 의 기본 값 `/` 조차도 없었던 것으로 기억되나 좀 더 **테스트가 필요**
+
+```
+YourProjectFolder
+Dockerfile
+...
+LISENSE
+README.md
+```
 
 
 ##### GitHub Repository Deploy Key 생성
