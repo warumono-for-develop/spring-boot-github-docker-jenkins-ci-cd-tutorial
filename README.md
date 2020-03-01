@@ -88,20 +88,19 @@ This module depends upon a knowledge of [Markdown]().
 
 #### Configure 설정
 
-  - [CloudBees Docker Hub/Registry Notification 2.4.0](https://plugins.jenkins.io/dockerhub-notification/) Plugin 설치
-  > `Jenkins` &nbsp; > &nbsp; `Manage Jenkins` &nbsp; > &nbsp; `Manage Plugins` 화면    
-  > 검색 입력 창에 `CloudBees` 입력 조회    
-  > `CloudBees Docker Hub/Registry Notification` 선택 설치 후, Jenkins 재가동
+  - [CloudBees Docker Hub/Registry Notification 2.4.0](https://plugins.jenkins.io/dockerhub-notification/) Plugin 설치    
+  `Jenkins` &nbsp; > &nbsp; `Manage Jenkins` &nbsp; > &nbsp; `Manage Plugins` 화면    
+  검색 입력 창에 `CloudBees` 입력 조회    
+  `CloudBees Docker Hub/Registry Notification` 선택 설치 후, Jenkins 재가동   
 
-  - Build Trigger & Build Execute shell 설정
-  > Jenkins &nbsp; > &nbsp; \<your-job-name\> &nbsp; > &nbsp; Project <your-job-name> > Configure 화면    
-  > Build Trigger   
-  - [ ] GitHub hook trigger for GITScm polling 항목 체크박스 비활성화(해제) - 사용자가 GitHub 으로 push 하는 것을 Webhook   
-  - [x] Monitor Docker Hub/Registry for image changes 항목 체크박스 활성화 - Docker Hub 에서 이미지 생성 또는 변경되는 것을 Webhook   
-  - [x] Specified repositories will trigger this job 항목 체크박스 활성화 - Webhook 된 사항에 따라 Jenkins 가 자동으로 임의의 작업 실행
-  Repositories 입력 창 {your-docker-image-name} 입력
-  
-  - Build Execute shell   
+  - Build Trigger & Build Execute shell 설정    
+  Jenkins &nbsp; > &nbsp; \<your-job-name\> &nbsp; > &nbsp; Project <your-job-name> > Configure 화면    
+      Build Trigger   
+  - [ ] GitHub hook trigger for GITScm polling 항목 체크박스 비활성화(해제) - 사용자가 GitHub 으로 push 하는 것을 Webhook
+  - [x] Monitor Docker Hub/Registry for image changes 항목 체크박스 활성화 - Docker Hub 에서 이미지 생성 또는 변경되는 것을 Webhook
+  - [x] Specified repositories will trigger this job 항목 체크박스 활성화 - Webhook 된 사항에 따라 Jenkins 가 자동으로 임의의 작업 실행    
+  Repositories 입력 창 {your-docker-image-name} 입력   
+      Build Execute shell   
   ```sh
   docker rm -f {your-docker-container-name} || true   
   docker pull {your-docker-image-name}    
