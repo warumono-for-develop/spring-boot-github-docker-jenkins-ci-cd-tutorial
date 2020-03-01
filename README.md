@@ -95,13 +95,15 @@ This module depends upon a knowledge of [Markdown]().
 
   - Build Trigger & Build Execute shell 설정    
   Jenkins &nbsp; > &nbsp; \<your-job-name\> &nbsp; > &nbsp; Project <your-job-name> > Configure 화면    
-      Build Trigger   
-  - [ ] GitHub hook trigger for GITScm polling 항목 체크박스 비활성화(해제) - 사용자가 GitHub 으로 push 하는 것을 Webhook
-  - [x] Monitor Docker Hub/Registry for image changes 항목 체크박스 활성화 - Docker Hub 에서 이미지 생성 또는 변경되는 것을 Webhook
-  - [x] Specified repositories will trigger this job 항목 체크박스 활성화 - Webhook 된 사항에 따라 Jenkins 가 자동으로 임의의 작업 실행    
+  Build Trigger   
+  - [ ] GitHub hook trigger for GITScm polling 항목 체크박스 비활성화(해제) : 사용자가 GitHub 으로 push 하는 것을 Webhook
+  - [x] Monitor Docker Hub/Registry for image changes 항목 체크박스 활성화 : Docker Hub 에서 이미지 생성 또는 변경되는 것을 Webhook
+  - [x] Specified repositories will trigger this job 항목 체크박스 활성화 : Webhook 된 사항에 따라 Jenkins 가 자동으로 임의의 작업 실행    
   Repositories 입력 창 {your-docker-image-name} 입력   
-      Build Execute shell   
+  Build Execute shell   
   ```sh
+  # 기존 {your-docker-container-name} 컨테이너 삭제   
+  # 단, 최초 실행(docker run)시 {your-docker-container-name} 컨테이너는 존재하지 않아 빌드가 실패하는 것을 방지하기 위하여 || true 구문을 넣어 정상적으로 진행 되도록 처리
   docker rm -f {your-docker-container-name} || true   
   docker pull {your-docker-image-name}    
   docker run -d -p {your-host-port}:{your-application-port} --name {your-docker-container-name} {your-docker-image-name}
