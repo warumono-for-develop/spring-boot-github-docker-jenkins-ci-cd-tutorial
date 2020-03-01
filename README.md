@@ -18,14 +18,12 @@
     <br />
     <br />
     <a href="https://github.com/warumono-for-develop/spring-boot-github-docker-jenkins-ci-cd-tutorial">View Tutorial</a>
-    &nbsp; | &nbsp;
+    &nbsp; <b>|</b> &nbsp;
     <a href="https://github.com/warumono-for-develop/spring-boot-github-docker-jenkins-ci-cd-tutorial">Report Bug</a>
-    &nbsp; | &nbsp;
+    &nbsp; <b>|</b> &nbsp;
     <a href="https://github.com/warumono-for-develop/spring-boot-github-docker-jenkins-ci-cd-tutorial">Request Feature</a>
   </p>
 </p>
-
-CI/CD 를 위한 작업 지침서
 
 ## Table of Contents
 
@@ -41,6 +39,8 @@ CI/CD 를 위한 작업 지침서
 - [License](#license)
 
 ## Getting Started
+
+>! Spoiler text
 
 ### Any optional sections
 
