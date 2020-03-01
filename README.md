@@ -88,11 +88,68 @@ This module depends upon a knowledge of [Markdown]().
 
 #### Configure 설정
 
-  - [CloudBees Docker Hub/Registry Notification 2.4.0](https://plugins.jenkins.io/dockerhub-notification/) Plugin 설치 aa
-  
-  > Jenkins > Manage Jenkins > Manage Plugins 화면    
+  - [CloudBees Docker Hub/Registry Notification 2.4.0](https://plugins.jenkins.io/dockerhub-notification/) Plugin 설치
+  > `Jenkins` &nbsp; > &nbsp; `Manage Jenkins` &nbsp; > &nbsp; `Manage Plugins` 화면    
   > 검색 입력 창에 `CloudBees` 입력 조회    
   > `CloudBees Docker Hub/Registry Notification` 선택 설치 후, Jenkins 재가동
+
+  - Build Trigger & Build Execute shell 설정
+  > Jenkins &nbsp; > &nbsp; \<your-job-name\> &nbsp; > &nbsp; Project <your-job-name> > Configure 화면    
+  > Build Trigger   
+  - [ ] GitHub hook trigger for GITScm polling 항목 체크박스 비활성화(해제) - 사용자가 GitHub 으로 push 하는 것을 Webhook   
+  - [x] Monitor Docker Hub/Registry for image changes 항목 체크박스 활성화 - Docker Hub 에서 이미지 생성 또는 변경되는 것을 Webhook   
+  - [x] Specified repositories will trigger this job 항목 체크박스 활성화 - Webhook 된 사항에 따라 Jenkins 가 자동으로 임의의 작업 실행
+  Repositories 입력 창 {your-docker-image-name} 입력
+  
+  - Build Execute shell   
+  ```sh
+  docker rm -f {your-docker-container-name} || true   
+  docker pull {your-docker-image-name}    
+  docker run -d -p {your-host-port}:{your-application-port} --name {your-docker-container-name} {your-docker-image-name}
+  ```
+
+
+Build Trigger 섹션에서
+
+ GitHub hook trigger for GITScm polling 항목 체크박스 비활성화(해제)
+
+GitHub hook trigger for GITScm polling 은 GitHub 으로 push 되면 Jenkins 의 Webhook 에 의해 임의의 작업을 하는 것으로
+
+본 작업에서는 불필요한 작업이므로 비활성화 함
+
+ Monitor Docker Hub/Registry for image changes 항목 체크박스 활성화
+
+ Any referenced Docker image can trigger this job 항목 체크박스 활성화
+
+ Specified repositories will trigger this job 항목 체크박스 활성화
+
+Repositories 입력 창에 {your-docker-image-name} 입력
+
+job Build Execute shell 설정
+기존 Shell Script 가 존재한다면모두 삭제하고, 새롭게 작성
+
+docker rm -f {your-docker-container-name} || true
+
+기존에 {your-docker-container-name} 이 구동되고 있다면 강제로 삭제
+
+최초 실행(docker run)시 해당 컨테이너는 존재하지 않아 빌드가 실패하는 것을 방지하기 위하여 || true 구문을 넣어 정상적으로 진행 되도록 처리
+
+docker pull {your-docker-image-name}
+
+docker run -d -p {your-aws-ec2-port}:{your-application-port} --name {your-docker-container-name} {your-docker-image-name}
+
+변수	설명	예시	비고
+your-docker-container-name	Docker 컨테이너 이름	spring-boot-restful-api-server-repository	Docker 실행(run) 명령어에서 지정하는 이름
+your-docker-image-name	Docker 이미지 이름	warumono/spring-boot-restful-api-server	비고
+your-aws-ec2-public-port	호스트 접근 PORT	8080	외부에서 접근하는 PORT 로 내부 어플리케이션 접근 PORT 와 동일하게 지정. 반드시 동일하지 않아도 무관.
+your-application-port	어플리케이션 접근 PORT	8080	어플리케이션 개발 시 설정된 PORT
+docker rm -f spring-boot-restful-api-server-repository || true
+
+docker pull warumono/spring-boot-restful-api-server
+
+docker run -d -p 8080:8080 --name spring-boot-restful-api-server-repository warumono/spring-boot-restful-api-server
+
+
 
 
 ```
