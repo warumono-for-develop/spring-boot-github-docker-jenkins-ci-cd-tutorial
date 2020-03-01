@@ -15,7 +15,7 @@
 
 <br />
 <p align="center">
-  <a href="https://github.com/warumono-for-develop/spring-boot-github-docker-jenkins-ci-cd-tutorial">
+  <a href="https://warumono-for-develop.github.io">
     <img src="https://github.com/warumono-for-develop/warumono-for-develop.github.io/blob/master/logos/WARU-MONO-logo.png?raw=true" alt="Logo" width="280" height="180">
   </a>
 
