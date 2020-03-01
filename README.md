@@ -28,8 +28,6 @@
 ## Table of Contents 목차
 
 - [Getting Started](#getting-started)
-- [Security](#security)
-- [Background](#background)
 - [Install](#install)
 - [Usage](#usage)
 - [API](#api)
@@ -52,6 +50,12 @@
   Expanded
 </details>
 
+### Requirements 요구사항
+
+본 작업에 앞서 관련 대상 프로그램, 데이터 및 서버 등은 반드시 백업 완료 후 작업할 것을 권장   
+본 작업을 작업하는 시점, 프로그램 버전 및 환경 등이 달라 설명 글의 진행 절차 또는 결과가 다소 다르거나 생략 또는 추가 작업이 있을 수 있음    
+잘못된 용어 또는 정보가 다분히 포함되어 있는 비전문 지식을 바탕으로 설명되어 있으므로 공식 사이트 등에서 관련 정보를 미리 숙지하고 작업할 것을 권장
+
 ### About The Tutorial 지침서에 대하여
 
   - 프로그래머 입장에서의 개발이라하면 코딩뿐만이 아니라 리소스 형상관리, 빌드 및 배포작업 등은 필수적인 개발과정 중 일부   
@@ -61,17 +65,15 @@
 
 ### Prerequisites 전제조건
 
-본 작업에 앞서 관련 대상 프로그램, 데이터 및 서버 등은 반드시 백업 완료 후 작업할 것을 권장   
-본 작업을 작업하는 시점, 프로그램 버전 및 환경 등이 달라 설명 글의 진행 절차 또는 결과가 다소 다르거나 생략 또는 추가 작업이 있을 수 있음    
-잘못된 용어 또는 정보가 있을 수 있으니 공식 사이트 등에서 관련 정보를 미리 숙지하고 작업할 것을 권장
+#### Required 필수사항
 
-## Security
+  - [x] [Spring Boot RESTFul API Server Template](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template)
+  - [x] [Docker Installation Tutorial](https://github.com/warumono-for-develop/docker-installation-tutorial)
+  - [x] [Jenkins Installation Tutorial](https://github.com/warumono-for-develop/jenkins-installation-tutorial)
 
-### Any optional sections
+#### Optional 선택사항
 
-## Background
-
-### Any optional sections
+  - [ ] [Jupyter Notebook Installation Tutorial](https://github.com/warumono-for-develop/jupyter-notebook-installation-tutorial)
 
 ## Install
 
@@ -79,8 +81,6 @@ This module depends upon a knowledge of [Markdown]().
 
 ```
 ```
-
-### Any optional sections
 
 ## Usage
 
@@ -91,13 +91,15 @@ Note: The `license` badge image link at the top of this file should be updated w
 
 ### Any optional sections
 
-## API
-
-### Any optional sections
-
 ## FAQ
 
-### Any optional sections
+### Variable
+
+본 지침서는 작성자의 기준으로 설명하다보니 모든 작업의 내용대로 복사하여 사용할 경우 의도하지 않은 과정이나 결과를 도래할 수 있기에,   
+사용자 자신의 환경 또는 원하는 내용대로 작업할 수 있도록 설명하기 위하여 변수 형태로 사용
+
+  - `{variable-name}` 사용자가 직접 입력해야하는 부분. http://`{your-host-ip}` ---> http://`123.456.789.0`
+  - `<variable-name>` 사용자의 어떠한 행위에 따른 제공되는 결과 부분. `<your-cert-key-name>`.pem ---> `my_cert`.pem
 
 ## More optional sections
 
