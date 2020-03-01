@@ -25,7 +25,7 @@
   </p>
 </p>
 
-## Table of Contents
+## Table of Contents 목차
 
 - [Getting Started](#getting-started)
 - [Security](#security)
@@ -38,16 +38,32 @@
 - [Contact](#contact)
 - [License](#license)
 
-## Getting Started
+## Getting Started 시작하기
 
->! Spoiler text
+<kbd>⌥</kbd>    
+<kbd>⌃</kbd>    
+<kbd>⇧</kbd>    
+<kbd>⌫</kbd>    
+<kbd>⌦</kbd>    
+<kbd>⌘</kbd>    
 
-### Any optional sections
+<details> 
+  <summary>Collapse</summary>
+  Expanded
+</details>
 
-  - 프로그램을 개발이라하면 리소스 형상관리작업은 보편적이면서 필수적인 개발과정 중 하나   
-  - 번거롭고 반복적인 작업으로 인해 효율성이 떨어지는 문제를 조금이나마 해소하고자 여러 모듈을 연동   
+### About The Tutorial 지침서에 대하여
+
+  - 프로그래머 입장에서의 개발이라하면 코딩뿐만이 아니라 리소스 형상관리, 빌드 및 배포작업 등은 필수적인 개발과정 중 일부   
+  - 번거롭고 반복적인 작업으로 인해 효율성이 떨어지는 문제를 조금이나마 해소하고자 여러 모듈 연동   
   - 보다 나은 작업환경을 만들어 보겠다고 생소한 용어들과 이해할 수 없는 원리 그리고 설정 등으로 인해 몇 차례 포기한 경험이 있지만    
 이번에야말로 완료 해보겠다는 생각으로 여러번의 실패 끝에 나름 성공한 결과를 토대로 설정 정보 및 진행순서 등을 기록한 지침서
+
+### Prerequisites 전제조건
+
+본 작업에 앞서 관련 대상 프로그램, 데이터 및 서버 등은 반드시 백업 완료 후 작업할 것을 권장   
+본 작업을 작업하는 시점, 프로그램 버전 및 환경 등이 달라 설명 글의 진행 절차 또는 결과가 다소 다르거나 생략 또는 추가 작업이 있을 수 있음    
+잘못된 용어 또는 정보가 있을 수 있으니 공식 사이트 등에서 관련 정보를 미리 숙지하고 작업할 것을 권장
 
 ## Security
 
