@@ -6,21 +6,21 @@
 
 <p align="center">
   <a href="https://warumono-for-develop.github.io">
-    <img src="https://github.com/warumono-for-develop/warumono-for-develop.github.io/blob/master/logos/WARU-MONO-logo.png?raw=true" alt="Logo" width="280" height="180">
+    <img src="https://github.com/warumono-for-develop/warumono-for-develop.github.io/blob/master/logos/WARU-MONO-logo.png?raw=true" alt="Logo" width="260" height="160">
   </a>
 
   <h1 align="center">Spring Boot &amp; Github &amp; Docker &amp; Jenkins CI / CD Tutorial</h1>
 
   <p align="center">
-    Spring Boot 어플리케이션의 리소스는 Github 에서 관리하고 Docker 로 이미지를 생성하여서 Jenkins 로 자동 빌드 및 배포 처리하는 CI/CD 작업 지침서
+    Spring Boot 어플리케이션의 리소스는 Github 에서 관리하고 Docker 로 이미지를 생성하여서 Jenkins 에 의해 자동 빌드 및 배포하는 CI/CD 작업 지침서
     <br />
     <a href="https://github.com/warumono-for-develop/spring-boot-github-docker-jenkins-ci-cd-tutorial"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/warumono-for-develop/spring-boot-github-docker-jenkins-ci-cd-tutorial">View Tutorial</a>
-     | 
+    &nbsp; | &nbsp;
     <a href="https://github.com/warumono-for-develop/spring-boot-github-docker-jenkins-ci-cd-tutorial">Report Bug</a>
-     | 
+    &nbsp; | &nbsp;
     <a href="https://github.com/warumono-for-develop/spring-boot-github-docker-jenkins-ci-cd-tutorial">Request Feature</a>
   </p>
 </p>
@@ -39,7 +39,6 @@ CI/CD 를 위한 작업 지침서
 - [Contributing](#contributing)
 - [Contact](#contact)
 - [License](#license)
-
 
 ## Getting Started
 
