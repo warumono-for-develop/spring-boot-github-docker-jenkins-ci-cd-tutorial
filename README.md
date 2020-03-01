@@ -93,13 +93,14 @@ Note: The `license` badge image link at the top of this file should be updated w
 
 ## FAQ
 
-### Variable
-
+<details> 
+  <summary>User variable 사용자 변수</summary>
 본 지침서는 작성자의 기준으로 설명하다보니 모든 작업의 내용대로 복사하여 사용할 경우 의도하지 않은 과정이나 결과를 도래할 수 있기에,   
-사용자 자신의 환경 또는 원하는 내용대로 작업할 수 있도록 설명하기 위하여 변수 형태로 사용
-
-  - `{variable-name}` 사용자가 직접 입력해야하는 부분. http://`{your-host-ip}` ---> http://`123.456.789.0`
-  - `<variable-name>` 사용자의 어떠한 행위에 따른 제공되는 결과 부분. `<your-cert-key-name>`.pem ---> `my_cert`.pem
+사용자 자신의 환경에 맞추거나 또는 원하는 내용대로 작업할 수 있도록 설명하기 위하여 변수 형태로 사용
+  
+- `{variable-name}` 사용자가 직접 입력해야하는 부분. http://`{your-host-ip}`:8080 ---> http://`123.456.789.0`:8080    
+- `<variable-name>` 사용자의 어떠한 행위에 따른 제공되는 결과 부분. `<your-cert-key-name>`.pem ---> `my_cert`.pem
+</details>
 
 ## More optional sections
 
