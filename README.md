@@ -67,13 +67,13 @@
 
 #### Required 필수사항
 
-  - [x] [Spring Boot RESTFul API Server Template](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template)
-  - [x] [Docker Installation Tutorial](https://github.com/warumono-for-develop/docker-installation-tutorial)
-  - [x] [Jenkins Installation Tutorial](https://github.com/warumono-for-develop/jenkins-installation-tutorial)
+  - [x] [Spring Boot RESTFul API Server Template][spring-boot-restful-api-server-template]
+  - [x] [Docker Installation Tutorial][docker-installation-tutorial]
+  - [x] [Jenkins Installation Tutorial][jenkins-installation-tutorial]
 
 #### Optional 선택사항
 
-  - [ ] [Jupyter Notebook Installation Tutorial](https://github.com/warumono-for-develop/jupyter-notebook-installation-tutorial)
+  - [ ] [Jupyter Notebook Installation Tutorial][jupyter-notebook-installation-tutorial]
 
 ## Install
 
@@ -82,7 +82,18 @@ This module depends upon a knowledge of [Markdown]().
 ```
 ```
 
-## Usage
+## Usage 사용방법
+
+### Jenkins
+
+#### Configure 설정
+
+  - [CloudBees Docker Hub/Registry Notification 2.4.0](https://plugins.jenkins.io/dockerhub-notification/) Plugin 설치 aa
+  
+  > Jenkins > Manage Jenkins > Manage Plugins 화면    
+  > 검색 입력 창에 `CloudBees` 입력 조회    
+  > `CloudBees Docker Hub/Registry Notification` 선택 설치 후, Jenkins 재가동
+
 
 ```
 ```
@@ -98,23 +109,11 @@ Note: The `license` badge image link at the top of this file should be updated w
 본 지침서는 작성자의 기준으로 설명하다보니 모든 작업의 내용대로 복사하여 사용할 경우 의도하지 않은 과정이나 결과를 도래할 수 있기에,
 사용자 자신의 환경에 맞추거나 또는 원하는 내용대로 작업할 수 있도록 설명하기 위하여 변수 형태로 사용    
 
-- `{variable-name}` 사용자가 직접 입력해야하는 부분. http://`{your-host-ip}`:8080 &nbsp; - - - > &nbsp; http://`123.456.789.0`:8080    
-- `<variable-name>` 사용자의 어떠한 행위에 따른 제공되는 결과 부분. `<your-cert-key-name>`.pem &nbsp; - - - > &nbsp; `my_cert`.pem
-
----
-
-</details>
-
-<details> 
-  <summary>User variable 사용자 변수</summary>
-본 지침서는 작성자의 기준으로 설명하다보니 모든 작업의 내용대로 복사하여 사용할 경우 의도하지 않은 과정이나 결과를 도래할 수 있기에,
-사용자 자신의 환경에 맞추거나 또는 원하는 내용대로 작업할 수 있도록 설명하기 위하여 변수 형태로 사용    
 
 - `{variable-name}` 사용자가 직접 입력해야하는 부분. http://`{your-host-ip}`:8080 &nbsp; - - - > &nbsp; http://`123.456.789.0`:8080    
 - `<variable-name>` 사용자의 어떠한 행위에 따른 제공되는 결과 부분. `<your-cert-key-name>`.pem &nbsp; - - - > &nbsp; `my_cert`.pem
 
 ---
-
 </details>
 
 ## More optional sections
@@ -140,6 +139,12 @@ Small note: If editing the Readme, please conform to the [standard-readme](https
 <!-- MARKDOWN LINKS & IMAGES -->
 
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
+[spring-boot-restful-api-server-template]: https://github.com/warumono-for-develop/spring-boot-restful-api-server-template "Spring Boot RESTFul API Server Template"
+[docker-installation-tutorial]: https://github.com/warumono-for-develop/docker-installation-tutorial "Docker Installation Tutorial"
+[jenkins-installation-tutorial]: https://github.com/warumono-for-develop/jenkins-installation-tutorial "Jenkins Installation Tutorial"
+[jupyter-notebook-installation-tutorial]: https://github.com/warumono-for-develop/jupyter-notebook-installation-tutorial "Jupyter Notebook Installation Tutorial"
+
 [contributors-shield]: https://img.shields.io/github/contributors/warumono-for-develop/jenkins-installation-tutorial.svg?style=flat-square
 [contributors-url]: https://github.com/warumono-for-develop/jenkins-installation-tutorial/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/warumono-for-develop/jenkins-installation-tutorial.svg?style=flat-square
