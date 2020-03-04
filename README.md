@@ -214,17 +214,16 @@ Docker Hub 에서 Github 과 연동을 위해서는 사전에 Docker Hub 사이�
 >> Dockerfile location `Dockerfile`   
 >> Build Caching `ON`
 
-사용자가 입력 또는 선택하는 값외에는 기본 값으로 설정
+[Spring Boot RESTFul API Server Template](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template) repository 를 빌드 대상으로 지정하였고 사용자가 입력 또는 선택하는 값외에는 기본 값으로 설정
 
 ```sh
-
-Name {your-application-docker-image-name}
+Name spring-boot-restful-api-server
 Visibility
   - [x] Public
 Build Settings
   Github
-    Select organization {your-github-id}
-    Select repository {your-application-repository}
+    Select organization warumono
+    Select repository spring-boot-restful-api-server-template
 BUILD RULES   
   Source Type Branch
   Source master
@@ -276,13 +275,12 @@ LISENSE
 README.md
 ```
 
-
-두 가지의 파일 구조에서 Case 1 인 경우 Docker Hub 기본 설정 값으로는 Dockerfile 을 인식하지 못하여 빌드 진행이 되지 않음
+두 가지의 파일 구조에서 Case 1 인 경우 Docker Hub **기본 설정 값으로는 Dockerfile 을 인식하지 못하여** 빌드 진행이 되지 않음
 
 Build 탭 화면 또는 `Repository never built. Click here to set up builds.` 문구의 *Click here* 를 클릭하여 화면 중간 부분 `Automated Builds` 영역에 `BUILD RULES` 정보가 나오는 것이 **정상**   
 `{your-application-docker-repository} Dashboard` 의 내용 중 `Recent builds` 영역에 `Repository never built. Click here to set up builds.` 문구가 나오는 것은 **비정상**
 
-원인은 Docker Hub repository 생성 시 `BUILD RULES` 의 `Build Context` 설정 부분이 잘못되어 `Dockerfile` 을 인식하지 못하는 것    
+### 원인은 Docker Hub repository 생성 시 `BUILD RULES` 의 `Build Context` 설정 부분이 잘못되어 `Dockerfile` 을 인식하지 못하는 것    
 즉, Case 1 파일 구조 프로젝트 폴더 인 경우 `Dockerfile` 의 경로는 **/\<your-project-folder\>/Dockerfile** 가 되는데 기본 설정 값 (/) 에는 **/\<your-project-folder\>/** 가 빠져 있는 값이므로 정상적으로 Dockerfile 을 인식하지 못하는 결과    
 그러므로, Case 2 파일 구조 리소스 인 경우 `Dockerfile` 의 경로는 **/** 가 되므로 기본 설정 값 (/) 과 정확히 맞게 되어 정상 빌드 됨    
 *Build Context 항목 tip 버블 창에 설명 되어 있음*   
@@ -295,12 +293,12 @@ Build 탭 화면 또는 `Repository never built. Click here to set up builds.` �
 
 ```sh
 > BUILD RULES   
->> Source Type &nbsp; &nbsp; &nbsp; &nbsp; `Branch`   
->> Source &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; `master`    
->> Docker Tag &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; `latest`    
->> Dockerfile location `Dockerfile`   
->> Build Context &nbsp; &nbsp; &nbsp; /{your-project-folder}/`    
->> Build Caching &nbsp; &nbsp; `ON`
+>> Source Type         Branch
+>> Source              master
+>> Docker Tag          latest
+>> Dockerfile location Dockerfile
+>> Build Context       /{your-project-folder}/
+>> Build Caching       ON
 ```
 
 ---
