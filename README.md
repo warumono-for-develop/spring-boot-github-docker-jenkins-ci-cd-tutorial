@@ -106,8 +106,6 @@
 
 Configure Jenkins
 
-#### Phase 1
-
 Install [CloudBees Docker Hub/Registry Notification 2.4.0](https://plugins.jenkins.io/dockerhub-notification/) Plugin
 
 Docker Hub 에서 이미지 빌드 완료 후 Docker Hub 는 Notification 을 발생시키면 Jenkins 는 Webhook 로 해당 Notification 을 인식하여 임의의 작업을 진행하도록 설정하는데, 여기서 Jenkins 가 Notification 을 인식할 수 있도록 하는 Plugin
@@ -123,16 +121,18 @@ CloudBees
 
 ### Step 2
 
-Configure Docker
-
-#### Phase 1
-
 Configure for connect to Github
 
-#### Caution
+Docker Hub 와 Github 과 연동을 위해서는 사전에 Docker Hub 사이트에서 Github 연동 설정을 완료하였거나, 새로운 Docker Hub repository 를 생성 후 Github 연동 설정을 완료하여 진행    
 
-Docker Hub 에서 Github 과 연동을 위해서는 사전에 Docker Hub 사이트에서 Github 연동 설정을 완료하였거나, 새로운 Docker Hub repository 를 생성 후 Github 연동 설정을 완료하여 진행    
-본 작업에서는 Docker Hub 와 Github 의 연동은 사전에 완료된 상태라는 전제로 작업 진행
+Docker Hub 사이트 로그인 상태에서 오른쪽 위 `<your-docker-name>` 을 선택 &nbsp; > &nbsp; 드롭다운 메뉴 중 `Account Settings` 선택 &nbsp; > &nbsp; `Account Settings` 화면 왼쪽 메뉴에서 `Linked Accounts` 선택    
+`Linked Accounts` 화면에서 Provider `GitHub` 또는 `Bitbucket` 중 `GitHub` 의 `connect` 를 클릭하여 `GitHub` 계정 로그인   
+정상으로 연결되면 `GitHub` 의 Account 에 <your-github-id> 가 표시됨
+
+
+
+## Usage
+
 
 [Docker](https://www.docker.com/) 사이트에 접속하여 로그인 &nbsp; > &nbsp; `Docker Dashboard` 화면 상단 `Repositories` 선택 &nbsp; > &nbsp; `Create Repository` 선택하여 새로운 repository 를 생성   
 
@@ -175,6 +175,14 @@ BUILD RULES
 *`Create & Build` 버튼을 클릭하면 설정 저장과 함께 Docerk 빌드가 진행되며 정상적으로 빌드 완료 후 Jenkins 에서도 설정에 따라 Jenkins 빌드 진행을 하는 테스트를 할 수 있음*    
 *본 작업에서는 `Create` 버튼을 클릭하여 설정 저장으로 완료하고 [Usage](#usage) 에서 작업 테스트로 진행*
 `<your-application-docker-repository> Dashboard` 화면으로 자동 전환되며, `Create & Build` 버튼을 클릭한 경우에는 빌드 진행 상태를 확인
+
+### Docker 빌드 후 최종적으로 생성되는 이미지의 이름은 `{your-docker-id}/{your-application-docker-image-name}` 가 됨
+
+> {your-docker-id}/{your-application-docker-image-name}
+
+```sh
+warumono/spring-boot-restful-api-server
+```
 
 <details> 
   <summary>Github repository 의 Dockerfile 인식 불가인 경우</summary>
@@ -256,24 +264,22 @@ README.md
 
 
 
-
-
-
-## Usage
-
-
 ### Create new Job in Jenkins
 
-Usage
-새로운 빌드 작업 (job) 생성, 설정 및 빌드 그리고 결과 확인
+새로운 빌드 작업 (job) 생성 및 설정   
+[Jenkins Installation Tutorial](https://github.com/warumono-for-develop/jenkins-installation-tutorial) 의 [Create new job](https://github.com/warumono-for-develop/jenkins-installation-tutorial/blob/master/README.md#create-new-job) 참조
 
-[Create new job](https://github.com/warumono-for-develop/jenkins-installation-tutorial/blob/master/README.md#create-new-job)
+> {your-jenkins-job-name}
 
-Configure Jenkin job Build Trigger
+```sh
+spring-boot-restful-api-server-jenkins
+```
+
+### Configure Jenkin job Build Trigger
 
 `Jenkins Dashboard` 화면 &nbsp; > &nbsp; 오른쪽 job 목록 중 `Name` 클릭 &nbsp; > &nbsp; `Project <your-jenkins-job-name>` 화면 &nbsp; > &nbsp; 왼쪽 메뉴 중 `Configure` 선택 &nbsp; > &nbsp; `Build Trigger` 영역
 
-본 작업에서 `{your-application-docker-image-name}` 은 [Spring Boot RESTFul API Server Template](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template) 를 Docker 이미지로 빌드하여 만들어지는 이미지의 이름으로 미리 결정하여 이 후 작업에 해당 이미지 이름을 사용하도록 함
+본 작업에서 `{your-application-docker-image-name}` 은 [Spring Boot RESTFul API Server Template](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template) 을 Docker 이미지로 빌드하여 만들어지는 이미지의 이름으로 미리 결정하여 이 후 작업에 해당 이미지 이름을 사용하도록 함
 
 - [ ] | \[ &nbsp;\] 체크박스 비활성화
 - [x] | \[x\] 체크박스 활성화
@@ -294,11 +300,8 @@ Configure Jenkin job Build Trigger
 
 *`GitHub hook trigger for GITScm polling` 은 사용자가 GitHub 으로 push 하면 Jenkins 의 Webhook 에 의해 이를 감지하는 기능으로, 본 지침서에서는 불필요한 작업이므로 비활성화*
 
-#### Phase 3
+### Configure Jenkin job Build Execute shell
 
-Configure Jenkin job Build Execute shell
-
-기존 Shell Script 가 존재한다면 모두 삭제하고, 새롭게 작성   
 Docker 명령어를 사용하여 이미지 다운로드, 컨테이너 삭제 및 실행 작업 등을 순차적으로 실행되도록 스크립트 작성
 
 > docker rm -f {your-application-docker-container-name} || true   
@@ -327,6 +330,17 @@ docker run -d -p 8080:8080 --name spring-boot-restful-api-server-repository waru
 |your-application-docker-image-name|Docker 이미지 이름|warumono/spring-boot-restful-api-server||
 |your-host-port|호스트 접근 PORT|8080|외부에서 접근하는 PORT 로 {your-application-port} 와 동일하게 지정. 반드시 동일하지 않아도 무관.|
 |your-application-port|어플리케이션 접근 PORT|8080|어플리케이션에 설정된 PORT|
+
+
+
+
+
+
+
+
+
+
+
 
 
 
