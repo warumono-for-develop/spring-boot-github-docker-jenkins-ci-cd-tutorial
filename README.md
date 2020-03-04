@@ -195,47 +195,50 @@ Configure for connect to Github
 
 [Docker](https://www.docker.com/) 사이트에 접속하여 로그인 &nbsp; > &nbsp; `Docker Dashboard` 화면 상단 `Repositories` 선택 &nbsp; > &nbsp; `Create Repository` 선택하여 새로운 repository 를 생성   
 
-> Name {your-application-docker-image-name}   
-> Visibility - [x] Public   
+> Name {your-application-docker-image-name}
+
+> Visibility    
+>> - [x] Public
+
 > Build Settings    
->> Github   
->>> Select organization   
->>> Select repository   
+>> `Github`   
+>>> Select organization {your-github-id}   
+>>> Select repository {your-application-repository}
+
 > BUILD RULES   
->> Source Type Branch   
->> Source master    
->> Docker Tag latest    
->> Dockerfile location Dockerfile   
->> Build Caching ON   
+>> Source Type `Branch`   
+>> Source `master`    
+>> Docker Tag `latest`    
+>> Dockerfile location `Dockerfile`   
+>> Build Caching `ON`   
 
 <details> 
   <summary>Github repository 의 Dockerfile 인식 불가로 인해 빌드 진행이 않되는 경우</summary>
 
-Recent builds
-Repository never built. Click here to set up builds.
 
-`{your-docker-repository} 대시보드` 화면에서 `Build 탭` 화면으로 이동
+먼저 프로젝트 리소스 를 Github 으로 push 하면 Github repository 첫 화면에 나타나는 두 가지의 파일 구조가 있음    
+Case 1 과 Case 2 의 프로젝트는 \<your-project-folder\> 프로젝트 이름을 갖는 동일한 프로젝트
 
-화면 오른쪽 위 `Configure Automated Builds` 버튼 클릭하여 `Build configurations` 화면으로 이동하여 화면 아래 부분의 `BUILD RULES` 섹션에서 `BUILD RULES` 섹션 이름 옆 `+` 버튼을 클릭하여 입력 창들이 나타남
+### Case 1
 
-그 중 `Build Context` 의 기본 값 `/` 즉, Dockerfile 위치가 GitHub repository 파일 구조가 프로젝트 루드 폴더로 시작하는 구조가 아닌 프로젝트 루트 폴더 내부의 파일들로 시작하는 구조인 상태의 경로가 `Build Context` 의 기본 값 `/` 을 가리킴
+Github repository 파일 구조가 `프로젝트 폴더` 인 경우   
+*`프로젝트 폴더` 란 작성자가 임의로 지정한 이름으로 프로젝트 생성 시 **프로젝트 이름으로 생성되는 폴더**를 말하며 이 폴더내에 소스 파일 및 폴더 등이 존재*
 
-GitHub repository 파일 구조가 `프로젝트 루드 폴더로 시작`하는 구조
-
-*`YourProjectFolder` 내부에 프로젝트 폴더 및 파일들이 들어 있는 경우*
-
-**이 경우에는 `Build Context` 를 `/YourProjectFolder/` 로 입력**
+`프로젝트 폴더` 를 Github repository 파일 구조로 도식화
 
 ```
-YourProjectFolder
+\<your-project-folder\>
 ...
 LISENSE
 README.md
 ```
 
-GitHub repository 파일 구조가 `프로젝트 루트 폴더 내부의 폴더 및 파일들로 시작`하는 구조
+### Case 2
 
-**이 경우에는 `Build Context` 기본 값 `/` 사용 또는 입력**
+Github repository 파일 구조가 `리소스` 인 경우   
+*`리소스` 란 작성자가 임의로 지정한 이름으로 **`프로젝트 폴더` 내에 존재하는 소스 파일 및 폴더 등***
+
+`리소스` 를 Github repository 파일 구조로 도식화
 
 ```
 binFolder
@@ -252,26 +255,35 @@ LISENSE
 README.md
 ```
 
-GitHub repository 파일 구조가 프로젝트 루드 폴더로 시작하는 구조하고 Dockerfile 이 / 위치에 있는 경우에도 정상적으로 진행되지 않는 것으로 판단됨
 
-인위적으로 이러한 구조를 만들어 진행하였지만 우선을 Docker Hub 에서는 인식을 못하고 빌드 자체를 진행하지 않았음
+두 가지의 파일 구조에서 Case 1 인 경우 Docker Hub 기본 설정 값으로는 Dockerfile 을 인식하지 못하여 빌드 진행이 되지 않음
 
-단, 그 당시 `Build Context` 의 기본 값 `/` 조차도 없었던 것으로 기억되나 좀 더 **테스트가 필요**
+Build 탭 화면 또는 `Repository never built. Click here to set up builds.` 문구의 *Click here* 를 클릭하여 화면 중간 부분 `Automated Builds` 영역에 `BUILD RULES` 정보가 나오는 것이 **정상**   
+`{your-application-docker-repository} Dashboard` 의 내용 중 `Recent builds` 영역에 `Repository never built. Click here to set up builds.` 문구가 나오는 것은 **비정상**
 
+원인은 Docker Hub repository 생성 시 `BUILD RULES` 의 `Build Context` 설정 부분이 잘못되어 `Dockerfile` 을 인식하지 못하는 것    
+즉, Case 1 파일 구조 프로젝트 폴더 인 경우 `Dockerfile` 의 경로는 **/\<your-project-folder\>/Dockerfile** 가 되는데 기본 설정 값 (/) 에는 **/\<your-project-folder\>/** 가 빠져 있는 값이므로 정상적으로 Dockerfile 을 인식하지 못하는 결과    
+그러므로, Case 2 파일 구조 리소스 인 경우 `Dockerfile` 의 경로는 **/** 가 되므로 기본 설정 값 (/) 과 정확히 맞게 되어 정상 빌드 됨    
+*Build Context 항목 tip 버블 창에 설명 되어 있음*   
+
+> Path from the repository root to the files to build. The Dockerfile location is relative to this path.
+
+빌드 대상 프로젝트가 Github repository 에 Case 1 과 같은 프로젝트 폴더인 경우에는 Build Context 기본 값을 변경하여 설정
+
+> Build Context /{your-project-folder}/
+
+```sh
+> BUILD RULES   
+>> Source Type &nbsp; &nbsp; &nbsp; &nbsp; `Branch`   
+>> Source &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; `master`    
+>> Docker Tag &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; `latest`    
+>> Dockerfile location `Dockerfile`   
+>> Build Context &nbsp; &nbsp; &nbsp; /{your-project-folder}/`    
+>> Build Caching &nbsp; &nbsp; `ON`
 ```
-YourProjectFolder
-Dockerfile
-...
-LISENSE
-README.md
-```
-
 
 ---
 </details>
-
-##### Dockerfile Build rule 설정 (Optional GitHub repository 내의 Dockerfile 을 인식 못하는 경우)
-
 
 
 
