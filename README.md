@@ -554,7 +554,87 @@ Distributed under the MIT License. See [`LICENSE`][license-url] for more informa
 
 
 
+<style>
 
+html,
+body
+    font: 100% 'Lato', sans-serif
+    font-weight: 300
+    height: 100%
+    background-color: #4D4545
+
+.blue-bg
+    background-color: #4D4545
+    color: #ED8D8D
+    height: 100%
+    
+.circle
+    font-weight: bold
+    padding: 15px 20px
+    border-radius: 50%
+    background-color: #ED8D8D
+    color: $bg
+    max-height: 50px
+    z-index: 2
+
+.how-it-works.row
+    display: flex
+    .col-2
+        display: inline-flex
+        align-self: stretch
+        align-items: center
+        justify-content: center
+        &::after
+            content: ''
+            position: absolute
+            border-left: 3px solid #ED8D8D
+            z-index: 1
+    .col-2.bottom
+        &::after
+            height: 50%
+            left: 50%
+            top: 50%
+    .col-2.full
+        &::after
+            height: 100%
+            left: calc(50% - 3px)
+    .col-2.top
+        &::after
+            height: 50%
+            left: 50%
+            top: 0
+
+
+.timeline
+    div
+        padding: 0
+        height: 40px
+    hr
+        border-top: 3px solid #ED8D8D
+        margin: 0
+        top: 17px
+        position: relative
+    .col-2
+        display: flex
+        overflow: hidden
+    .corner
+        border: 3px solid #ED8D8D
+        width: 100%
+        position: relative
+        border-radius: 15px
+    .top-right
+        left: 50%
+        top: -50%
+    .left-bottom
+        left: -50%
+        top: calc(50% - 3px)
+    .top-left
+        left: -50%
+        top: -50%
+    .right-bottom
+        left: 50%
+        top: calc(50% - 3px)
+</style>
 
 
 
