@@ -121,67 +121,6 @@ Docker Hub 에서 이미지 빌드 완료 후 Docker Hub 는 Notification 을 �
 CloudBees
 ```
 
-#### Phase 2
-
-Configure Jenkin job Build Trigger
-
-`Jenkins Dashboard` 화면 &nbsp; > &nbsp; 오른쪽 job 목록 중 `Name` 클릭 &nbsp; > &nbsp; `Project <your-jenkins-job-name>` 화면 &nbsp; > &nbsp; 왼쪽 메뉴 중 `Configure` 선택 &nbsp; > &nbsp; `Build Trigger` 영역
-
-본 작업에서 `{your-application-docker-image-name}` 은 [Spring Boot RESTFul API Server Template](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template) 를 Docker 이미지로 빌드하여 만들어지는 이미지의 이름으로 미리 결정하여 이 후 작업에 해당 이미지 이름을 사용하도록 함
-
-- [ ] | \[ &nbsp;\] 체크박스 비활성화
-- [x] | \[x\] 체크박스 활성화
-
-> - [ ] GitHub hook trigger for GITScm polling    
-> - [x] Monitor Docker Hub/Registry for image changes   
-> - [x] Any referenced Docker image can trigger this job    
-> - [x] Specified repositories will trigger this job    
-> Repositories &nbsp; {your-application-docker-image-name}
-
-```sh
-[ ] GitHub hook trigger for GITScm polling
-[x] Monitor Docker Hub/Registry for image changes
-[x] Any referenced Docker image can trigger this job
-[x] Specified repositories will trigger this job
-     Repositories warumono-for-develop/spring-boot-restful-api-server
-```
-
-*`GitHub hook trigger for GITScm polling` 은 사용자가 GitHub 으로 push 하면 Jenkins 의 Webhook 에 의해 이를 감지하는 기능으로, 본 지침서에서는 불필요한 작업이므로 비활성화*
-
-#### Phase 3
-
-Configure Jenkin job Build Execute shell
-
-기존 Shell Script 가 존재한다면 모두 삭제하고, 새롭게 작성   
-Docker 명령어를 사용하여 이미지 다운로드, 컨테이너 삭제 및 실행 작업 등을 순차적으로 실행되도록 스크립트 작성
-
-> docker rm -f {your-application-docker-container-name} || true   
-> docker pull {your-application-docker-image-name}    
-> docker run -d -p {your-host-port}:{your-application-port} --name {your-application-docker-container-name} {your-application-docker-image-name}
-
-<details> 
-  <summary><strong> || true</strong> 코드의 의미</summary>
-
-호스트 서버 Docker 에 {your-application-docker-container-name} 의 컨테이너가 존재하지 않은 경우   
-최초 본 스크립트가 실행된다면 존재하지 않는 {your-application-docker-container-name} 의 컨테이너를 삭제하는 코드 (docker rm -f) 에 의해 스크립트 에러가 발생하여 빌드 실패    
-그러므로, `|| true` 코드는 오류가 있음에도 불구하고 진행이 가능하도록 처리하게 되므로 스크립트는 정상 작동
-
----
-</details>
-
-```sh
-docker rm -f spring-boot-restful-api-server-repository || true
-docker pull warumono/spring-boot-restful-api-server
-docker run -d -p 8080:8080 --name spring-boot-restful-api-server-repository warumono-for-develop/spring-boot-restful-api-server
-```
-
-|변수|설명|예시|비고|
-|---|---|---|---|
-|your-application-docker-container-name|Docker 컨테이너 이름|spring-boot-restful-api-server-repository|Docker container 삭제 (docker rmi) 시 사용됨|
-|your-application-docker-image-name|Docker 이미지 이름|warumono/spring-boot-restful-api-server||
-|your-host-port|호스트 접근 PORT|8080|외부에서 접근하는 PORT 로 {your-application-port} 와 동일하게 지정. 반드시 동일하지 않아도 무관.|
-|your-application-port|어플리케이션 접근 PORT|8080|어플리케이션에 설정된 PORT|
-
 ### Step 2
 
 Configure Docker
@@ -311,7 +250,89 @@ README.md
 
 
 
+
+
+
+
+
+
+
+
+
 ## Usage
+
+
+### Create new Job in Jenkins
+
+Usage
+새로운 빌드 작업 (job) 생성, 설정 및 빌드 그리고 결과 확인
+
+[Create new job | New Item](https://github.com/warumono-for-develop/jenkins-installation-tutorial/blob/master/README.md)
+
+Configure Jenkin job Build Trigger
+
+`Jenkins Dashboard` 화면 &nbsp; > &nbsp; 오른쪽 job 목록 중 `Name` 클릭 &nbsp; > &nbsp; `Project <your-jenkins-job-name>` 화면 &nbsp; > &nbsp; 왼쪽 메뉴 중 `Configure` 선택 &nbsp; > &nbsp; `Build Trigger` 영역
+
+본 작업에서 `{your-application-docker-image-name}` 은 [Spring Boot RESTFul API Server Template](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template) 를 Docker 이미지로 빌드하여 만들어지는 이미지의 이름으로 미리 결정하여 이 후 작업에 해당 이미지 이름을 사용하도록 함
+
+- [ ] | \[ &nbsp;\] 체크박스 비활성화
+- [x] | \[x\] 체크박스 활성화
+
+> - [ ] GitHub hook trigger for GITScm polling    
+> - [x] Monitor Docker Hub/Registry for image changes   
+> - [x] Any referenced Docker image can trigger this job    
+> - [x] Specified repositories will trigger this job    
+> Repositories &nbsp; {your-application-docker-image-name}
+
+```sh
+[ ] GitHub hook trigger for GITScm polling
+[x] Monitor Docker Hub/Registry for image changes
+[x] Any referenced Docker image can trigger this job
+[x] Specified repositories will trigger this job
+     Repositories warumono/spring-boot-restful-api-server
+```
+
+*`GitHub hook trigger for GITScm polling` 은 사용자가 GitHub 으로 push 하면 Jenkins 의 Webhook 에 의해 이를 감지하는 기능으로, 본 지침서에서는 불필요한 작업이므로 비활성화*
+
+#### Phase 3
+
+Configure Jenkin job Build Execute shell
+
+기존 Shell Script 가 존재한다면 모두 삭제하고, 새롭게 작성   
+Docker 명령어를 사용하여 이미지 다운로드, 컨테이너 삭제 및 실행 작업 등을 순차적으로 실행되도록 스크립트 작성
+
+> docker rm -f {your-application-docker-container-name} || true   
+> docker pull {your-application-docker-image-name}    
+> docker run -d -p {your-host-port}:{your-application-port} --name {your-application-docker-container-name} {your-application-docker-image-name}
+
+<details> 
+  <summary><strong> || true</strong> 코드의 의미</summary>
+
+호스트 서버 Docker 에 {your-application-docker-container-name} 의 컨테이너가 존재하지 않은 경우   
+최초 본 스크립트가 실행된다면 존재하지 않는 {your-application-docker-container-name} 의 컨테이너를 삭제하는 코드 (docker rm -f) 에 의해 스크립트 에러가 발생하여 빌드 실패    
+그러므로, `|| true` 코드는 오류가 있음에도 불구하고 진행이 가능하도록 처리하게 되므로 스크립트는 정상 작동
+
+---
+</details>
+
+```sh
+docker rm -f spring-boot-restful-api-server-repository || true
+docker pull warumono/spring-boot-restful-api-server
+docker run -d -p 8080:8080 --name spring-boot-restful-api-server-repository warumono-for-develop/spring-boot-restful-api-server
+```
+
+|변수|설명|예시|비고|
+|---|---|---|---|
+|your-application-docker-container-name|Docker 컨테이너 이름|spring-boot-restful-api-server-repository|Docker container 삭제 (docker rmi) 시 사용됨|
+|your-application-docker-image-name|Docker 이미지 이름|warumono/spring-boot-restful-api-server||
+|your-host-port|호스트 접근 PORT|8080|외부에서 접근하는 PORT 로 {your-application-port} 와 동일하게 지정. 반드시 동일하지 않아도 무관.|
+|your-application-port|어플리케이션 접근 PORT|8080|어플리케이션에 설정된 PORT|
+
+
+
+
+
+
 
 [Preview](#preview) 의 설명과 같이 사용자는 `사용자 작업 영역` 만 진행하여 `CI / CD 작업 영역` 이 자동으로 처리된 것을 확인
 정상적으로 모든 설정이 완료되었다면, 로컬 프로젝트에서 소스 일부를 편집한 후 git 명령어 또는 git 용 tool 을 사용하여 push 를 진행하고 설정에 따라 정상 동작 확인
