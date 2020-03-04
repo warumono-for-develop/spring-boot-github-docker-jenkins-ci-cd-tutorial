@@ -267,7 +267,7 @@ README.md
 Usage
 새로운 빌드 작업 (job) 생성, 설정 및 빌드 그리고 결과 확인
 
-[Create new job | New Item](https://github.com/warumono-for-develop/jenkins-installation-tutorial/blob/master/README.md#create-new-job-|-new-item)
+[Create new job](https://github.com/warumono-for-develop/jenkins-installation-tutorial/blob/master/README.md#create-new-job)
 
 Configure Jenkin job Build Trigger
 
