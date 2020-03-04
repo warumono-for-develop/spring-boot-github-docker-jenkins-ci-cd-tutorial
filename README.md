@@ -190,26 +190,12 @@ Configure Docker
 
 Configure for connect to Github
 
+#### Caution
+
+Docker Hub 에서 Github 과 연동을 위해서는 사전에 Docker Hub 사이트에서 Github 연동 설정을 완료하였거나, 새로운 Docker Hub repository 를 생성 후 Github 연동 설정을 완료하여 진행    
+본 작업에서는 Docker Hub 와 Github 의 연동은 사전에 완료된 상태라는 전제로 작업 진행
+
 [Docker](https://www.docker.com/) 사이트에 접속하여 로그인 &nbsp; > &nbsp; `Docker Dashboard` 화면 상단 `Repositories` 선택 &nbsp; > &nbsp; `Create Repository` 선택하여 새로운 repository 를 생성   
-
-> Name {your-application-docker-image-name}
-
-> Visibility    
->> - [x] Public
-
-> Build Settings    
->> `Github`   
->>> Select organization {your-github-id}   
->>> Select repository {your-application-repository}
-
-> > BUILD RULES   
-> >> Source Type `Branch`   
-> >> Source `master`    
-> >> Docker Tag `latest`    
-> >> Dockerfile location `Dockerfile`   
-> >> Build Caching `ON`
-
-```sh
 
 > Name {your-application-docker-image-name}
 
@@ -228,6 +214,23 @@ Configure for connect to Github
 >> Dockerfile location `Dockerfile`   
 >> Build Caching `ON`
 
+사용자가 입력 또는 선택하는 값외에는 기본 값으로 설정
+
+```sh
+
+Name {your-application-docker-image-name}
+Visibility
+  - [x] Public
+Build Settings
+  Github
+    Select organization {your-github-id}
+    Select repository {your-application-repository}
+BUILD RULES   
+  Source Type Branch
+  Source master
+  Docker Tag latest
+  Dockerfile location Dockerfile
+  Build Caching ON
 ```
 
 <details> 
@@ -303,45 +306,6 @@ Build 탭 화면 또는 `Repository never built. Click here to set up builds.` �
 ---
 </details>
 
-
-
-
-
-
-> apt update    
-> install ca-certificates   
-> install curl    
-> install software-properties-common    
-> curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -    
-> add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"    
-> apt update
-
-```sh
-your-terminal> sudo apt update
-your-terminal> sudo install ca-certificates
-your-terminal> sudo install curl
-your-terminal> sudo install software-properties-common
-your-terminal> curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-your-terminal> sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-your-terminal> sudo apt update
-```
-
-### Step 2
-
-Install Docker
-
-> apt-cache policy docker-ce    
-> apt install docker-ce
-
-Docker 상태 확인 후, <kbd>control</kbd> + <kbd>C</kbd> 키를 눌러 Docker 에서 나옴
-
-```sh
-your-terminal> apt-cache policy docker-ce
-your-terminal> sudo apt install docker-ce
-...
-your-terminal> sudo systemctrl status docker
-...
-```
 
 
 ## Usage
