@@ -333,18 +333,32 @@ docker run -d -p 8080:8080 --name spring-boot-restful-api-server-repository waru
 
 #### First build
 
-- 최초 로컬 프로젝트를 GitHub 으로 push    
+- **로컬 프로젝트를 GitHub 으로 push**   
 - Docker 빌드 실행 여부 및 정상 완료 확인    
 - Jenkins 빌드 실행 여부 및 정상 완료 확인   
 - AWS EC2 서버에 배포되어 정상적으로 어플리케이션이 동작하는지 확인
 
 [Spring Boot RESTFul API Server Template](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template) 의 [Usage](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template#Usage) 참조하여 테스트
 
+Docker 명령어로 이미지 생성 여부 확인
+
+> docker search {your-application-docker-image-name-keyword}
+
+```sh
+your-terminal> docker search spring-boot-restful-api-server
+NAME                                      DESCRIPTION                     STARS               OFFICIAL            AUTOMATED
+warumono/spring-boot-restful-api-server   SpringBoot RESTFul API Server   0
+```
+
 #### Second build
 
-다시
+로컬 프로젝트의 소스 코드를 일부 수정한 후, [First build](#first-build) 와 같이 재차 진행 및 확인
 
-> edit your project soruce code as you want
+<details> 
+  <summary>Test</summary>
+
+
+#### Edit your project soruce code as you want
 
 [Spring Boot RESTFul API Server Template](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template) 의 [RouterConfiguration.java](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template/blob/master/src/main/java/com/warumono/app/configurations/RouterConfiguration.java) 파일에 일부 코드를 추가
 
@@ -410,6 +424,11 @@ Jenkins 의 빌드 작업까지 완료되었다면, 어플리케이션 테스트
 your-terminal> curl http://localhost:8080/ping?param=doesitwork
 {"ping":"pong","response":"Hello Client!","your-param":"doesitwork","timestamp":"2020-03-04T23:09:05.275"}
 ```
+
+
+---
+</details>
+
 
 
 ## FAQ
