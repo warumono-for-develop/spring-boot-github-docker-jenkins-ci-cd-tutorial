@@ -97,7 +97,7 @@
 
 `사용자 작업 영역` 은 일반적으로 개발 리소스 형상 관리 작업인 GitHub 으로 push 하는 행위의 영역   
 `CI / CD 작업 영역` 각 모듈 별 연동 설정에 의해 빌드 및 배포 작업이 자동화 처리되는 영역    
-작업의 진행 방향은 왼쪽에서 오른쪽으로 순차적으로 진행되며, 본 지침서에 의해 설정된 후에는 `사용자 작업 영역` 행위만으로 자동 빌드 및 배포 가능
+작업의 진행 방향은 왼쪽에서 오른쪽으로 순차적으로 진행되며, 본 지침서에 의해 설정된 후에는 `사용자 작업 영역` 행위만으로 `CI / CD 작업 영역` 자동 실행 가능
 
 
 ## Install
@@ -143,7 +143,7 @@ Configure Jenkin job Build Trigger
 [x] Monitor Docker Hub/Registry for image changes
 [x] Any referenced Docker image can trigger this job
 [x] Specified repositories will trigger this job
-     Repositories` &nbsp; warumono-for-develop/spring-boot-restful-api-server
+     Repositories warumono-for-develop/spring-boot-restful-api-server
 ```
 
 *`GitHub hook trigger for GITScm polling` 은 사용자가 GitHub 으로 push 하면 Jenkins 의 Webhook 에 의해 이를 감지하는 기능으로, 본 지침서에서는 불필요한 작업이므로 비활성화*
@@ -164,13 +164,10 @@ Docker 명령어를 사용하여 이미지 다운로드, 컨테이너 삭제 및
 
 호스트 서버 Docker 에 {your-application-docker-container-name} 의 컨테이너가 존재하지 않은 경우   
 최초 본 스크립트가 실행된다면 존재하지 않는 {your-application-docker-container-name} 의 컨테이너를 삭제하는 코드 (docker rm -f) 에 의해 스크립트 에러가 발생하여 빌드 실패    
-그러므로, `|| true` 코드를 같이 입력하므로써 이러한 스크립트 에러를 막는 코드이므로 반드시 입력
+그러므로, `|| true` 코드는 오류가 있음에도 불구하고 진행이 가능하도록 처리하게 되므로 스크립트는 정상 작동
 
 ---
 </details>
-
-` || true` 코드의 의미는, Docker 이미지 {your-application-docker-image-name} 를 사용하여 실행 (run) 한 컨테이너가 Docker Hub 에 존재하지 않는 경우 최초 본 스크립트가 실행된다면  기존에 {your-docker-container-name} 이 구동되고 있다면 강제로 삭제*
-*<strong>최초 실행(docker run)시 해당 컨테이너는 존재하지 않아 빌드가 실패</strong>하는 것을 방지하기 위하여 **_`|| true`_** 구문을 넣어 정상적으로 진행 되도록 처리*
 
 ```sh
 docker rm -f spring-boot-restful-api-server-repository || true
@@ -180,7 +177,7 @@ docker run -d -p 8080:8080 --name spring-boot-restful-api-server-repository waru
 
 |변수|설명|예시|비고|
 |---|---|---|---|
-|your-application-docker-container-name|Docker 컨테이너 이름|spring-boot-restful-api-server-repository|Docker container 삭제 (rni) 시 사용됨|
+|your-application-docker-container-name|Docker 컨테이너 이름|spring-boot-restful-api-server-repository|Docker container 삭제 (docker rmi) 시 사용됨|
 |your-application-docker-image-name|Docker 이미지 이름|warumono/spring-boot-restful-api-server||
 |your-host-port|호스트 접근 PORT|8080|외부에서 접근하는 PORT 로 {your-application-port} 와 동일하게 지정. 반드시 동일하지 않아도 무관.|
 |your-application-port|어플리케이션 접근 PORT|8080|어플리케이션에 설정된 PORT|
@@ -205,12 +202,33 @@ Configure for connect to Github
 >>> Select organization {your-github-id}   
 >>> Select repository {your-application-repository}
 
+> > BUILD RULES   
+> >> Source Type `Branch`   
+> >> Source `master`    
+> >> Docker Tag `latest`    
+> >> Dockerfile location `Dockerfile`   
+> >> Build Caching `ON`
+
+```sh
+
+> Name {your-application-docker-image-name}
+
+> Visibility    
+>> - [x] Public
+
+> Build Settings    
+>> `Github`   
+>>> Select organization {your-github-id}   
+>>> Select repository {your-application-repository}
+
 > BUILD RULES   
 >> Source Type `Branch`   
 >> Source `master`    
 >> Docker Tag `latest`    
 >> Dockerfile location `Dockerfile`   
->> Build Caching `ON`   
+>> Build Caching `ON`
+
+```
 
 <details> 
   <summary>Github repository 의 Dockerfile 인식 불가로 인해 빌드 진행이 않되는 경우</summary>
