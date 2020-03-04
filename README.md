@@ -30,6 +30,7 @@
 ## Table of Contents 목차
 
 - [Getting Started](#getting-started)
+- [Preview](#preview)
 - [Install](#install)
 - [Usage](#usage)
 - [FAQ](#faq)
@@ -88,8 +89,14 @@
 
 ## Preview
 
+작성자가 이해한 내용을 토대로 간략하게 도식화한 것으로 정확한 정보는 해당 공식 사이트 등에서 참조하여 이해하것을 권장
+
 `Spring Boot Application` <--- `Git` ---> `GitHub` <--- `Docker` ---> `Docker Hub` <--- `Webhook` ---> `Jenkins`
 
+|------------ `사용자 작업 영역` ------------|------------------------- `CI / CD 작업 영역` -------------------------|
+
+`사용자 작업 영역` 은 일반적으로 개발 리소스 형상 관리 작업인 GitHub 으로 push 하는 행위의 영역   
+`CI / CD 작업 영역` 각 모듈 별 연동 설정에 의해 빌드 및 배포 작업이 자동화 처리되는 영역
 
 
 ## Install
@@ -551,152 +558,3 @@ Distributed under the MIT License. See [`LICENSE`][license-url] for more informa
 [license-shield]: https://img.shields.io/github/license/warumono-for-develop/spring-boot-github-docker-jenkins-ci-cd-tutorial.svg?style=flat-square
 [license-url]: https://github.com/warumono-for-develop/spring-boot-github-docker-jenkins-ci-cd-tutorial/blob/master/LICENSE
 [product-screenshot]: images/screenshot.png
-
-
-
-<style>
-
-html,
-body
-    font: 100% 'Lato', sans-serif
-    font-weight: 300
-    height: 100%
-    background-color: #4D4545
-
-.blue-bg
-    background-color: #4D4545
-    color: #ED8D8D
-    height: 100%
-    
-.circle
-    font-weight: bold
-    padding: 15px 20px
-    border-radius: 50%
-    background-color: #ED8D8D
-    color: $bg
-    max-height: 50px
-    z-index: 2
-
-.how-it-works.row
-    display: flex
-    .col-2
-        display: inline-flex
-        align-self: stretch
-        align-items: center
-        justify-content: center
-        &::after
-            content: ''
-            position: absolute
-            border-left: 3px solid #ED8D8D
-            z-index: 1
-    .col-2.bottom
-        &::after
-            height: 50%
-            left: 50%
-            top: 50%
-    .col-2.full
-        &::after
-            height: 100%
-            left: calc(50% - 3px)
-    .col-2.top
-        &::after
-            height: 50%
-            left: 50%
-            top: 0
-
-
-.timeline
-    div
-        padding: 0
-        height: 40px
-    hr
-        border-top: 3px solid #ED8D8D
-        margin: 0
-        top: 17px
-        position: relative
-    .col-2
-        display: flex
-        overflow: hidden
-    .corner
-        border: 3px solid #ED8D8D
-        width: 100%
-        position: relative
-        border-radius: 15px
-    .top-right
-        left: 50%
-        top: -50%
-    .left-bottom
-        left: -50%
-        top: calc(50% - 3px)
-    .top-left
-        left: -50%
-        top: -50%
-    .right-bottom
-        left: 50%
-        top: calc(50% - 3px)
-</style>
-
-
-
-<div class="container-fluid blue-bg">
-    <div class="container">
-        <h2 class="pb-3 pt-2">Vertical Left-Right Timeline</h2>
-        <!--first section-->
-        <div class="row align-items-center how-it-works">
-            <div class="col-2 text-center bottom">
-                <div class="circle">1</div>
-            </div>
-            <div class="col-6">
-                <h5>Fully Responsive</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed porttitor gravida aliquam. Morbi orci urna, iaculis in ligula et, posuere interdum lectus.</p>
-            </div>
-        </div>
-        <!--path between 1-2-->
-        <div class="row timeline">
-            <div class="col-2">
-                <div class="corner top-right"></div>
-            </div>
-            <div class="col-8">
-                <hr/>
-            </div>
-            <div class="col-2">
-                <div class="corner left-bottom"></div>
-            </div>
-        </div>
-        <!--second section-->
-        <div class="row align-items-center justify-content-end how-it-works">
-            <div class="col-6 text-right">
-                <h5>Using Bootstrap</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed porttitor gravida aliquam. Morbi orci urna, iaculis in ligula et, posuere interdum lectus.</p>
-            </div>
-            <div class="col-2 text-center full">
-                <div class="circle">2</div>
-            </div>
-        </div>
-        <!--path between 2-3-->
-        <div class="row timeline">
-            <div class="col-2">
-                <div class="corner right-bottom"></div>
-            </div>
-            <div class="col-8">
-                <hr/>
-            </div>
-            <div class="col-2">
-                <div class="corner top-left"></div>
-            </div>
-        </div>
-        <!--third section-->
-        <div class="row align-items-center how-it-works">
-            <div class="col-2 text-center top">
-                <div class="circle">3</div>
-            </div>
-            <div class="col-6">
-                <h5>Now with Pug and Sass</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed porttitor gravida aliquam. Morbi orci urna, iaculis in ligula et, posuere interdum lectus.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
