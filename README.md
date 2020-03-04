@@ -89,21 +89,62 @@
 
 ## Preview
 
-작성자가 주관적으로 이해한 내용을 토대로 간략하게 도식화한 것으로 정확한 정보는 해당 공식 사이트 등에서 참조하여 이해할 것을 권장
+작성자가 주관적으로 이해한 내용을 토대로 간략하게 도식화한 것으로 정확한 정보는 해당 공식 사이트 등을 참조하여 이해할 것을 권장
 
 `Spring Boot Application` <--- `Git` ---> `GitHub` <--- `Docker` ---> `Docker Hub` <--- `Webhook` ---> `Jenkins`
 
 |-------------- `사용자 작업 영역` -------------|-------------------------- `CI / CD 작업 영역` --------------------------|
 
 `사용자 작업 영역` 은 일반적으로 개발 리소스 형상 관리 작업인 GitHub 으로 push 하는 행위의 영역   
-`CI / CD 작업 영역` 각 모듈 별 연동 설정에 의해 빌드 및 배포 작업이 자동화 처리되는 영역
+`CI / CD 작업 영역` 각 모듈 별 연동 설정에 의해 빌드 및 배포 작업이 자동화 처리되는 영역    
+작업의 진행 방향은 왼쪽에서 오른쪽으로 순차적으로 진행되며, 본 지침서에 의해 설정된 후에는 `사용자 작업 영역` 행위만으로 자동 빌드 및 배포 가능
 
 
 ## Install
 
 ### Step 1
 
-For Jenkins
+#### For Jenkins
+
+##### Phase 1
+
+Install [CloudBees Docker Hub/Registry Notification 2.4.0](https://plugins.jenkins.io/dockerhub-notification/) Plugin
+
+Docker Hub 에서 이미지 빌드 완료 후 Docker Hub 는 Notification 을 발생시키면 Jenkins 는 Webhook 로 해당 Notification 을 인식하여 임의의 작업을 진행하도록 설정하는데, 여기서 Jenkins 가 Notification 을 인식할 수 있도록 하는 Plugin
+
+`Jenkins Dashboard` 화면 &nbsp; > &nbsp; 왼쪽 메뉴 중 `Manage Jenkins` 선택 &nbsp; > &nbsp; `Manage Plugins` 선택 &nbsp; > &nbsp; 오른쪽 상단 검색 입력 창에 `CloudBees` 키워드 입력 조회    
+조회된 목록 중 `CloudBees Docker Hub/Registry Notification` 선택 설치 후, Jenkins 재가동
+
+> CloudBees
+
+```sh
+CloudBees
+```
+
+#### Configure Jenkin job Build Trigger
+
+
+아래 설정에 따라 Docker Hub 에서 임의의 repository 를 이미지로 만들어 등록이 완료되면 Jenkins 는 Notification 을 감지하고 **자동으로 임의의 작업 실행**
+
+`Jenkins 대시보드` 화면에서 오른쪽 임의의 job Name 을 선택하여 Project {your-job-name} 화면으로 이동하여 왼쪽 메뉴 중 Configure 선택
+
+Build Trigger 섹션에서 
+
+- [ ] `GitHub hook trigger for GITScm polling` 항목 체크박스 비활성화(해제)
+
+    *`GitHub hook trigger for GITScm polling` 은 GitHub 으로 push 되면 Jenkins 의 Webhook 에 의해 임의의 작업을 하는 것으로*
+
+    *본 작업에서는 불필요한 작업이므로 비활성화 함*
+
+- [x] `Monitor Docker Hub/Registry for image changes` 항목 체크박스 활성화
+
+- [x] `Any referenced Docker image can trigger this job` 항목 체크박스 활성화
+
+- [x] `Specified repositories will trigger this job` 항목 체크박스 활성화
+
+`Repositories` 입력 창에 `{your-docker-image-name}` 입력
+
+
 
 > apt update    
 > install ca-certificates   
