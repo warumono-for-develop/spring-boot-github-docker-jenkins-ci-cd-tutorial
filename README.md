@@ -104,9 +104,9 @@
 
 ### Step 1
 
-#### For Jenkins
+Configure Jenkins
 
-##### Phase 1
+#### Phase 1
 
 Install [CloudBees Docker Hub/Registry Notification 2.4.0](https://plugins.jenkins.io/dockerhub-notification/) Plugin
 
@@ -121,28 +121,160 @@ Docker Hub 에서 이미지 빌드 완료 후 Docker Hub 는 Notification 을 �
 CloudBees
 ```
 
-#### Configure Jenkin job Build Trigger
+#### Phase 2
+
+Configure Jenkin job Build Trigger
+
+`Jenkins Dashboard` 화면 &nbsp; > &nbsp; 오른쪽 job 목록 중 `Name` 클릭 &nbsp; > &nbsp; `Project <your-jenkins-job-name>` 화면 &nbsp; > &nbsp; 왼쪽 메뉴 중 `Configure` 선택 &nbsp; > &nbsp; `Build Trigger` 영역
+
+본 작업에서 `{your-application-docker-image-name}` 은 [Spring Boot RESTFul API Server Template](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template) 를 Docker 이미지로 빌드하여 만들어지는 이미지의 이름으로 미리 결정하여 이 후 작업에 해당 이미지 이름을 사용하도록 함
+
+- [ ] | \[ &nbsp;\] 체크박스 비활성화
+- [x] | \[x\] 체크박스 활성화
+
+> - [ ] GitHub hook trigger for GITScm polling    
+> - [x] Monitor Docker Hub/Registry for image changes   
+> - [x] Any referenced Docker image can trigger this job    
+> - [x] Specified repositories will trigger this job    
+> Repositories &nbsp; {your-application-docker-image-name}
+
+```sh
+[ ] GitHub hook trigger for GITScm polling
+[x] Monitor Docker Hub/Registry for image changes
+[x] Any referenced Docker image can trigger this job
+[x] Specified repositories will trigger this job
+     Repositories` &nbsp; warumono-for-develop/spring-boot-restful-api-server
+```
+
+*`GitHub hook trigger for GITScm polling` 은 사용자가 GitHub 으로 push 하면 Jenkins 의 Webhook 에 의해 이를 감지하는 기능으로, 본 지침서에서는 불필요한 작업이므로 비활성화*
+
+#### Phase 3
+
+Configure Jenkin job Build Execute shell
+
+기존 Shell Script 가 존재한다면 모두 삭제하고, 새롭게 작성   
+Docker 명령어를 사용하여 이미지 다운로드, 컨테이너 삭제 및 실행 작업 등을 순차적으로 실행되도록 스크립트 작성
+
+> docker rm -f {your-application-docker-container-name} || true   
+> docker pull {your-application-docker-image-name}    
+> docker run -d -p {your-host-port}:{your-application-port} --name {your-application-docker-container-name} {your-application-docker-image-name}
+
+<details> 
+  <summary><strong> || true</strong> 코드의 의미</summary>
+
+호스트 서버 Docker 에 {your-application-docker-container-name} 의 컨테이너가 존재하지 않은 경우   
+최초 본 스크립트가 실행된다면 존재하지 않는 {your-application-docker-container-name} 의 컨테이너를 삭제하는 코드 (docker rm -f) 에 의해 스크립트 에러가 발생하여 빌드 실패    
+그러므로, `|| true` 코드를 같이 입력하므로써 이러한 스크립트 에러를 막는 코드이므로 반드시 입력
+
+---
+</details>
+
+` || true` 코드의 의미는, Docker 이미지 {your-application-docker-image-name} 를 사용하여 실행 (run) 한 컨테이너가 Docker Hub 에 존재하지 않는 경우 최초 본 스크립트가 실행된다면  기존에 {your-docker-container-name} 이 구동되고 있다면 강제로 삭제*
+*<strong>최초 실행(docker run)시 해당 컨테이너는 존재하지 않아 빌드가 실패</strong>하는 것을 방지하기 위하여 **_`|| true`_** 구문을 넣어 정상적으로 진행 되도록 처리*
+
+```sh
+docker rm -f spring-boot-restful-api-server-repository || true
+docker pull warumono/spring-boot-restful-api-server
+docker run -d -p 8080:8080 --name spring-boot-restful-api-server-repository warumono-for-develop/spring-boot-restful-api-server
+```
+
+|변수|설명|예시|비고|
+|---|---|---|---|
+|your-application-docker-container-name|Docker 컨테이너 이름|spring-boot-restful-api-server-repository|Docker container 삭제 (rni) 시 사용됨|
+|your-application-docker-image-name|Docker 이미지 이름|warumono/spring-boot-restful-api-server||
+|your-host-port|호스트 접근 PORT|8080|외부에서 접근하는 PORT 로 {your-application-port} 와 동일하게 지정. 반드시 동일하지 않아도 무관.|
+|your-application-port|어플리케이션 접근 PORT|8080|어플리케이션에 설정된 PORT|
+
+### Step 2
+
+Configure Docker
+
+#### Phase 1
+
+Configure for connect to Github
+
+[Docker](https://www.docker.com/) 사이트에 접속하여 로그인 &nbsp; > &nbsp; `Docker Dashboard` 화면 상단 `Repositories` 선택 &nbsp; > &nbsp; `Create Repository` 선택하여 새로운 repository 를 생성   
+
+> Name {your-application-docker-image-name}   
+> Visibility - [x] Public   
+> Build Settings    
+>> Github   
+>>> Select organization   
+>>> Select repository   
+> BUILD RULES   
+>> Source Type Branch   
+>> Source master    
+>> Docker Tag latest    
+>> Dockerfile location Dockerfile   
+>> Build Caching ON   
+
+<details> 
+  <summary>Github repository 의 Dockerfile 인식 불가로 인해 빌드 진행이 않되는 경우</summary>
+
+Recent builds
+Repository never built. Click here to set up builds.
+
+`{your-docker-repository} 대시보드` 화면에서 `Build 탭` 화면으로 이동
+
+화면 오른쪽 위 `Configure Automated Builds` 버튼 클릭하여 `Build configurations` 화면으로 이동하여 화면 아래 부분의 `BUILD RULES` 섹션에서 `BUILD RULES` 섹션 이름 옆 `+` 버튼을 클릭하여 입력 창들이 나타남
+
+그 중 `Build Context` 의 기본 값 `/` 즉, Dockerfile 위치가 GitHub repository 파일 구조가 프로젝트 루드 폴더로 시작하는 구조가 아닌 프로젝트 루트 폴더 내부의 파일들로 시작하는 구조인 상태의 경로가 `Build Context` 의 기본 값 `/` 을 가리킴
+
+GitHub repository 파일 구조가 `프로젝트 루드 폴더로 시작`하는 구조
+
+*`YourProjectFolder` 내부에 프로젝트 폴더 및 파일들이 들어 있는 경우*
+
+**이 경우에는 `Build Context` 를 `/YourProjectFolder/` 로 입력**
+
+```
+YourProjectFolder
+...
+LISENSE
+README.md
+```
+
+GitHub repository 파일 구조가 `프로젝트 루트 폴더 내부의 폴더 및 파일들로 시작`하는 구조
+
+**이 경우에는 `Build Context` 기본 값 `/` 사용 또는 입력**
+
+```
+binFolder
+gradle/wrapperFolder
+srcFolder
+.gitignore
+...
+Dockerfile
+...
+build.gradle
+...
+settings.gradle
+LISENSE
+README.md
+```
+
+GitHub repository 파일 구조가 프로젝트 루드 폴더로 시작하는 구조하고 Dockerfile 이 / 위치에 있는 경우에도 정상적으로 진행되지 않는 것으로 판단됨
+
+인위적으로 이러한 구조를 만들어 진행하였지만 우선을 Docker Hub 에서는 인식을 못하고 빌드 자체를 진행하지 않았음
+
+단, 그 당시 `Build Context` 의 기본 값 `/` 조차도 없었던 것으로 기억되나 좀 더 **테스트가 필요**
+
+```
+YourProjectFolder
+Dockerfile
+...
+LISENSE
+README.md
+```
 
 
-아래 설정에 따라 Docker Hub 에서 임의의 repository 를 이미지로 만들어 등록이 완료되면 Jenkins 는 Notification 을 감지하고 **자동으로 임의의 작업 실행**
+---
+</details>
 
-`Jenkins 대시보드` 화면에서 오른쪽 임의의 job Name 을 선택하여 Project {your-job-name} 화면으로 이동하여 왼쪽 메뉴 중 Configure 선택
+##### Dockerfile Build rule 설정 (Optional GitHub repository 내의 Dockerfile 을 인식 못하는 경우)
 
-Build Trigger 섹션에서 
 
-- [ ] `GitHub hook trigger for GITScm polling` 항목 체크박스 비활성화(해제)
 
-    *`GitHub hook trigger for GITScm polling` 은 GitHub 으로 push 되면 Jenkins 의 Webhook 에 의해 임의의 작업을 하는 것으로*
 
-    *본 작업에서는 불필요한 작업이므로 비활성화 함*
-
-- [x] `Monitor Docker Hub/Registry for image changes` 항목 체크박스 활성화
-
-- [x] `Any referenced Docker image can trigger this job` 항목 체크박스 활성화
-
-- [x] `Specified repositories will trigger this job` 항목 체크박스 활성화
-
-`Repositories` 입력 창에 `{your-docker-image-name}` 입력
 
 
 
