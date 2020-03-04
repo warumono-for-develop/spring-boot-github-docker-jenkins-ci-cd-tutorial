@@ -133,6 +133,10 @@ Docker Hub 사이트 로그인 상태에서 오른쪽 위 `<your-docker-name>` �
 
 ## Usage
 
+[Preview](#preview) 의 설명과 같이 사용자는 `사용자 작업 영역` 만 진행하여 `CI / CD 작업 영역` 이 자동으로 처리된 것을 확인   
+정상적으로 모든 설정이 완료되었다면, 로컬 프로젝트에서 소스 일부를 편집한 후 git 명령어 또는 git 용 tool 을 사용하여 push 를 진행하고 설정에 따라 정상 동작 확인
+
+### Docker
 
 [Docker](https://www.docker.com/) 사이트에 접속하여 로그인 &nbsp; > &nbsp; `Docker Dashboard` 화면 상단 `Repositories` 선택 &nbsp; > &nbsp; `Create Repository` 선택하여 새로운 repository 를 생성   
 
@@ -176,7 +180,7 @@ BUILD RULES
 *본 작업에서는 `Create` 버튼을 클릭하여 설정 저장으로 완료하고 [Usage](#usage) 에서 작업 테스트로 진행*
 `<your-application-docker-repository> Dashboard` 화면으로 자동 전환되며, `Create & Build` 버튼을 클릭한 경우에는 빌드 진행 상태를 확인
 
-### Docker 빌드 후 최종적으로 생성되는 이미지의 이름은 `{your-docker-id}/{your-application-docker-image-name}` 가 됨
+### Docker 빌드 후 최종적으로 생성되는 이미지 이름은 `{your-docker-id}/{your-application-docker-image-name}` 가 됨
 
 > {your-docker-id}/{your-application-docker-image-name}
 
@@ -256,15 +260,9 @@ README.md
 ---
 </details>
 
+### Jenkins
 
-
-
-
-
-
-
-
-### Create new Job in Jenkins
+#### Create new Job in Jenkins
 
 새로운 빌드 작업 (job) 생성 및 설정   
 [Jenkins Installation Tutorial](https://github.com/warumono-for-develop/jenkins-installation-tutorial) 의 [Create new job](https://github.com/warumono-for-develop/jenkins-installation-tutorial/blob/master/README.md#create-new-job) 참조
@@ -275,7 +273,7 @@ README.md
 spring-boot-restful-api-server-jenkins
 ```
 
-### Configure Jenkin job Build Trigger
+#### Configure Jenkin job Build Trigger
 
 `Jenkins Dashboard` 화면 &nbsp; > &nbsp; 오른쪽 job 목록 중 `Name` 클릭 &nbsp; > &nbsp; `Project <your-jenkins-job-name>` 화면 &nbsp; > &nbsp; 왼쪽 메뉴 중 `Configure` 선택 &nbsp; > &nbsp; `Build Trigger` 영역
 
@@ -300,7 +298,7 @@ spring-boot-restful-api-server-jenkins
 
 *`GitHub hook trigger for GITScm polling` 은 사용자가 GitHub 으로 push 하면 Jenkins 의 Webhook 에 의해 이를 감지하는 기능으로, 본 지침서에서는 불필요한 작업이므로 비활성화*
 
-### Configure Jenkin job Build Execute shell
+#### Configure Jenkin job Build Execute shell
 
 Docker 명령어를 사용하여 이미지 다운로드, 컨테이너 삭제 및 실행 작업 등을 순차적으로 실행되도록 스크립트 작성
 
@@ -331,27 +329,20 @@ docker run -d -p 8080:8080 --name spring-boot-restful-api-server-repository waru
 |your-host-port|호스트 접근 PORT|8080|외부에서 접근하는 PORT 로 {your-application-port} 와 동일하게 지정. 반드시 동일하지 않아도 무관.|
 |your-application-port|어플리케이션 접근 PORT|8080|어플리케이션에 설정된 PORT|
 
+### Application
 
+#### First build
 
+- 최초 로컬 프로젝트를 GitHub 으로 push    
+- Docker 빌드 실행 여부 및 정상 완료 확인    
+- Jenkins 빌드 실행 여부 및 정상 완료 확인   
+- AWS EC2 서버에 배포되어 정상적으로 어플리케이션이 동작하는지 확인
 
+[Spring Boot RESTFul API Server Template](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template) 의 [Usage](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template#Usage) 참조하여 테스트
 
+#### Second build
 
-
-
-
-
-
-
-
-
-
-
-
-
-[Preview](#preview) 의 설명과 같이 사용자는 `사용자 작업 영역` 만 진행하여 `CI / CD 작업 영역` 이 자동으로 처리된 것을 확인
-정상적으로 모든 설정이 완료되었다면, 로컬 프로젝트에서 소스 일부를 편집한 후 git 명령어 또는 git 용 tool 을 사용하여 push 를 진행하고 설정에 따라 정상 동작 확인
-
-### Edit your project source code
+다시
 
 > edit your project soruce code as you want
 
@@ -405,11 +396,15 @@ public class RouterConfiguration
 }
 ```
 
-### Test
+#### Test
+
+Jenkins 의 빌드 작업까지 완료되었다면, 어플리케이션 테스트를 진행하여 변경된 코드에 따른 예상된 결과와 실제 테스트 결과를 비교 확인
 
 > curl http://{your-host-ip}:{your-host-port}/ping?param={your-parameter}
 
 > {"ping":"pong","response":"Hello Client!","your-param":"{your-parameter}","timestamp":"{your-request-timestamp}"}
+
+변경된 코드 (response 추가 코드) `"response":"Hello Client!"` 가 포함된 결과 값인지 확인
 
 ```sh
 your-terminal> curl http://localhost:8080/ping?param=doesitwork
