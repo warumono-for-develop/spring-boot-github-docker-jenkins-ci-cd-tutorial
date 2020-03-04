@@ -232,9 +232,17 @@ BUILD RULES
   Build Caching ON
 ```
 
-<details> 
-  <summary>Github repository 의 Dockerfile 인식 불가로 인해 빌드 진행이 않되는 경우</summary>
+설정이 완료된 후, `Create` 버튼을 클릭하여 설정 저장    
+*`Create & Build` 버튼을 클릭하면 설정 저장과 함께 Docerk 빌드가 진행되며 정상적으로 빌드 완료 후 Jenkins 에서도 설정에 따라 Jenkins 빌드 진행을 하는 테스트를 할 수 있음*    
+*본 작업에서는 `Create` 버튼을 클릭하여 설정 저장으로 완료하고 [Usage](#usage) 에서 작업 테스트로 진행*
+`<your-application-docker-repository> Dashboard` 화면으로 자동 전환되며, `Create & Build` 버튼을 클릭한 경우에는 빌드 진행 상태를 확인
 
+<details> 
+  <summary>Github repository 의 Dockerfile 인식 불가인 경우</summary>
+
+
+`<your-application-docker-repository> Dashboard` 화면 위 Build 탭 화면 또는 `Repository never built. Click here to set up builds.` 문구의 *Click here* 를 클릭하여 화면 중간 부분 `Automated Builds` 영역에 `BUILD RULES` 정보가 나오는 것이 **정상**   
+또는, Docker 빌드 진행을 하였는데 `{your-application-docker-repository} Dashboard` 화면에서 `Recent builds` 영역에 `Repository never built. Click here to set up builds.` 문구가 나오는 것은 **비정상**
 
 먼저 프로젝트 리소스 를 Github 으로 push 하면 Github repository 첫 화면에 나타나는 두 가지의 파일 구조가 있음    
 Case 1 과 Case 2 의 프로젝트는 \<your-project-folder\> 프로젝트 이름을 갖는 동일한 프로젝트
@@ -277,9 +285,6 @@ README.md
 
 두 가지의 파일 구조에서 Case 1 인 경우 Docker Hub **기본 설정 값으로는 Dockerfile 을 인식하지 못하여** 빌드 진행이 되지 않음
 
-Build 탭 화면 또는 `Repository never built. Click here to set up builds.` 문구의 *Click here* 를 클릭하여 화면 중간 부분 `Automated Builds` 영역에 `BUILD RULES` 정보가 나오는 것이 **정상**   
-`{your-application-docker-repository} Dashboard` 의 내용 중 `Recent builds` 영역에 `Repository never built. Click here to set up builds.` 문구가 나오는 것은 **비정상**
-
 ### 원인은 Docker Hub repository 생성 시 `BUILD RULES` 의 `Build Context` 설정 부분이 잘못되어 `Dockerfile` 을 인식하지 못하는 것    
 즉, Case 1 파일 구조 프로젝트 폴더 인 경우 `Dockerfile` 의 경로는 **/\<your-project-folder\>/Dockerfile** 가 되는데 기본 설정 값 (/) 에는 **/\<your-project-folder\>/** 가 빠져 있는 값이므로 정상적으로 Dockerfile 을 인식하지 못하는 결과    
 그러므로, Case 2 파일 구조 리소스 인 경우 `Dockerfile` 의 경로는 **/** 가 되므로 기본 설정 값 (/) 과 정확히 맞게 되어 정상 빌드 됨    
@@ -308,51 +313,73 @@ Build 탭 화면 또는 `Repository never built. Click here to set up builds.` �
 
 ## Usage
 
-정상적으로 Docker 설치가 완료되었다면 Docker 공식 사이트에서 제공하는 image `hello-world` 를 다운로드하여 구동하는 것으로 Docker 기본 사용 방법 연습
+[Preview](#preview) 의 설명과 같이 사용자는 `사용자 작업 영역` 만 진행하여 `CI / CD 작업 영역` 이 자동으로 처리된 것을 확인
+정상적으로 모든 설정이 완료되었다면, 로컬 프로젝트에서 소스 일부를 편집한 후 git 명령어 또는 git 용 tool 을 사용하여 push 를 진행하고 설정에 따라 정상 동작 확인
 
-### Pull image from Docker Hub
+### Edit your project source code
 
-> docker pull {your-docker-image-name}
+> edit your project soruce code as you want
 
-```sh
-your-terminal> docker pull hello-world
-your-terminal> docker images
-REPOSITORY                     TAG                 IMAGE ID            CREATED             SIZE
-hello-world                    latest              fce289e99eb9        14 months ago       1.84kB
+[Spring Boot RESTFul API Server Template](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template) 의 [RouterConfiguration.java](https://github.com/warumono-for-develop/spring-boot-restful-api-server-template/blob/master/src/main/java/com/warumono/app/configurations/RouterConfiguration.java) 파일에 일부 코드를 추가
+
+```java
+package com.warumono.app.configurations;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.web.servlet.function.RequestPredicates;
+import org.springframework.web.servlet.function.RouterFunction;
+import org.springframework.web.servlet.function.RouterFunctions;
+import org.springframework.web.servlet.function.ServerResponse;
+
+@Configuration
+public class RouterConfiguration
+{
+    @Bean
+    public RouterFunction<ServerResponse> ping()
+    {
+        return RouterFunctions.route
+        (
+            RequestPredicates.GET("/ping"), 
+            serverRequest -> 
+                ServerResponse
+                    .ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body
+                    (
+                        new HashMap<String, String>()
+                        {
+                            private static final long serialVersionUID = 1L;
+
+                            {
+                                put("ping", "pong");
+                                // added new code
+                                put("response", "Hello Client!");
+                                put("your-param", serverRequest.param("param").orElse(null));
+                                put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                            }
+                        }
+                    )
+        );
+    }
+}
 ```
 
-### Run container
+### Test
 
-> docker run {your-docker-image-name}
+> curl http://{your-host-ip}:{your-host-port}/ping?param={your-parameter}
+
+> {"ping":"pong","response":"Hello Client!","your-param":"{your-parameter}","timestamp":"{your-request-timestamp}"}
 
 ```sh
-your-terminal> docker run hello-world
-Hello from Docker!
-This message shows that your installation appears to be working correctly.
-
-To generate this message, Docker took the following steps:
- 1. The Docker client contacted the Docker daemon.
- 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
-    (amd64)
- 3. The Docker daemon created a new container from that image which runs the
-    executable that produces the output you are currently reading.
- 4. The Docker daemon streamed that output to the Docker client, which sent it
-    to your terminal.
-
-To try something more ambitious, you can run an Ubuntu container with:
- $ docker run -it ubuntu bash
-
-Share images, automate workflows, and more with a free Docker ID:
- https://hub.docker.com/
-
-For more examples and ideas, visit:
- https://docs.docker.com/get-started/
-your-terminal> 
-your-terminal> docker ps -a
-CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                     PORTS                 NAMES
-d3d5ae2842b1        hello-world         "/hello"                 3 minutes ago       Exited (0) 3 minutes ago                         sad_haibt
+your-terminal> curl http://localhost:8080/ping?param=doesitwork
+{"ping":"pong","response":"Hello Client!","your-param":"doesitwork","timestamp":"2020-03-04T23:09:05.275"}
 ```
-
 
 
 ## FAQ
