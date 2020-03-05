@@ -802,6 +802,426 @@ your-terminal> sudo usermod -aG docker {your-user-name}
 ---
 </details>
 
+<details> 
+  <summary>Git 간단 사용법</summary>
+
+
+작성자가 주관적으로 이해한 내용을 토대로 간략하게 도식화한 것으로 정확한 정보는 해당 공식 사이트 [Git](https://git-scm.com/) 등을 참조하여 이해할 것을 권장
+
+```
+|-------------------------- 사용자의 로컬 작업 공간 --------------------------|                    |- GitHub 공간 --|
+
+WORKSPACE ------ add ------> INDEX ------ commit ------> LOCAL REPOSITORY ------ push  -----> REMOTE REPOSITORY   
+          <--- checkout ----                                              <----- fetch ------
+          <--------------------------------------------------------------------- pull  ------
+```
+
+- `WORKSPACE` 리소스가 존재하는 폴더
+- `INDEX` 편집 또는 생성된 리소스 목록 임시 저장소
+- `LOCAL REPOSITORY` REMOTE REPOSITORY 와 연동되는 하나의 폴더
+- `REMOTE REPOSITORY` GitHub 사이트에 생성되어있는 하나의 저장소
+
+임의의 리소스를 생성하여 GitHub 사이트의 `REMOTE REPOSITORY` 로 push 하는 절차를 설명    
+이 외 작업은 공식 사이트 등을 참조하여 숙지
+
+Terminal 프로그램을 실행   
+git 관련 작업은 **git** 명령어로 시작
+
+### Git step 1
+
+**mkdir**
+
+`WORKSPACE` 를 생성하는 단계   
+형상 관리 대상 리소스를 저장할 폴더 생성   
+기존의 폴더 (리소스가 포함된 폴더도 가능) 사용 가능
+
+> mkdir {your-directory-path}
+
+새로운 `WORKSPACE` 생성
+
+```sh
+your-terminal> mkdir ~/Develop/Gitspace/HelloWorld
+your-terminal> ls
+HelloWorld
+```
+
+### Git step 2
+
+**init**
+
+`WORKSPACE` 를 `LOCAL REPOSITORY` 로 지정하는 단계
+
+존재하지 않는 경로인 경우 해당 경로로 폴더 또는 폴더들을 자동 생성하며 최종 경로의 폴더를 `LOCAL REPOSITORY` 로 지정
+해다 폴더내부에는 `.git` 파일 자동 생성됨
+
+현재 경로의 폴더를 `LOCAL REPOSITORY` 로 지정
+
+> git init
+
+임의의 경로에 새로운 폴더를 생성함과 동시에 해당 폴더를 `LOCAL REPOSITORY` 로 지정
+
+> git init {your-direcotry-path}
+
+```sh
+your-terminal> cd ~/Develop/Gitspace
+your-terminal> ls -al
+drwxr-xr-x  3 warumono  staff  611 Mar  5 14:50 .
+drwxr-xr-x  7 warumono  staff  204 Mar  5 14:50 ..
+your-terminal> git ./HelloWorld init
+your-terminal> ls -al
+drwxr-xr-x  3 warumono  staff  611 Mar  5 14:51 .
+drwxr-xr-x  7 warumono  staff  204 Mar  5 14:51 ..
+drwxr-xr-x  9 warumono  staff   96 Mar  5 14:51 HelloWorld
+your-terminal> cd HelloWorld
+your-terminal> ls -al
+drwxr-xr-x  3 warumono  staff  196 Mar  5 14:52 .
+drwxr-xr-x  7 warumono  staff  224 Mar  5 14:52 ..
+drwxr-xr-x  9 warumono  staff  288 Mar  5 14:52 .git
+```
+
+### Git step 3
+
+**add**
+
+`LOCAL REPOSITORY` 폴더 내부에 임의의 파일 생성 및 편집
+
+> vi {your-resouce-file-name}
+
+> git add {your-resouce-name-with-path}
+
+VIM 에디터로 helloworld.html 파일을 생성하고 간단한 HTML 소스 입력 후 저장하여 해당 파일을 `INDEX` 에 추가
+
+```sh
+> vi helloworld.html
+```
+
+```html
+<html>
+<head>
+<title>helloworld</title>
+</head>
+<body>
+<p>
+Hello World!
+</p>
+</body>
+</html>
+```
+
+```sh
+your-terminal> git add helloworld.html
+```
+
+### Git step 4
+
+**commit**
+
+`INDEX` 리소스를 `LOCAL REPOSITORY` 에 저장하는 단계
+
+`INDEX` 에 추가된 리소스를 `LOCAL REPOSITORY` 에 저장
+{your-commit-message} 에는 commit 대상 리소스에 대한 특이사항 또는 변경 내역 등의 사용자 편의에 따라 내용을 입력
+
+> git commit -m "{your-commit-message}"
+
+```sh
+your-terminal> git commit -m "first commit"
+```
+
+#### Git step 5
+
+**status**
+
+commit 된 `LOCAL REPOSITORY` 내의 리소스 상태 정보 확인하는 단계
+
+> git status
+
+```sh
+your-terminal> git status
+On branch master
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	helloworld.html
+
+nothing added to commit but untracked files present (use "git add" to track)
+```
+
+### Git step 6
+
+**remote**
+
+`LOCAL REPOSITORY` 와 `REMOTE REPOSITORY` 를 연결하는 단계
+
+`origin` 은 `LOCAL REPOSITORY` 에 생성되는 `REMOTE REPOSITORY` 원본 Branch    
+{your-remote-github-repository-url} 의 주소를 갖는 `REMOTE REPOSITORY` 와 연결할 `origin` 이름의 Branch 를 `LOCAL REPOSITORY` 에 생성
+
+> git remote add origin {your-remote-github-repository-url}
+
+```sh
+your-terminal> git remote add origin https://github.com/warumono-for-develop/hello-world.git
+```
+
+### Git step 7
+
+**push**
+
+`LOCAL REPOSITORY` 의 리소스를 `REMOTE REPOSITORY` 에 저장하는 단계
+
+GitHub 계정에 로그아웃 상태라면 로그인 하도록 유도되며 정상 로그인 후 정상 처리 됨
+`LOCAL REPOSITORY` 의 기본 Branch `origin` 을 `REMOTE REPOSITORY` 의  기본 Brach `master` 에 저장
+
+> git push {your-local-branch-name} {your-remote-brand-name}
+
+```sh
+your-terminal> git push origin master
+```
+
+**add**
+
+`LOCAL REPOSITORY` 에 임의의 파일 생성 및 편집
+
+> git add {your-resouce-name-with-path}
+
+VIM 에디터로 helloworld.html 파일을 생성하고 간단한 HTML 소스 입력 후 저장하여 해당 파일을 `INDEX` 에 추가
+
+```sh
+> vi helloworld.html
+```
+
+```html
+<html>
+<head>
+<title>helloworld</title>
+</head>
+<body>
+<p>
+Hello World!
+</p>
+</body>
+</html>
+```
+
+```sh
+your-terminal> git add helloworld.html
+```
+
+`지정한 리소스만` 추가
+
+> git add {your-resouce-name-with-path}
+
+<br />
+`전체 리소스` 추가
+
+> git add .
+
+<br />
+`변경된 리소스만` 추가
+
+> git add -u
+
+<br />
+`변경되었거나 새롭게 생성된 리소스만` 추가
+
+> git add -A
+
+**branch**
+
+Branch `목록 조회` 및 `현재 위치의 Branch 확인` 명령어   
+`* {your-a-branch}` `*` 붙은 Branch 는 현재의 위치한 Branch 를 가리킴
+
+> git branch
+
+```sh
+your-terminal> git branch
+* master
+```
+
+`Branch 생성` 명령어
+
+> git branch {your-new-git-branch}
+
+`bugfix` Branch 생성
+
+```sh
+your-terminal> git branch bugfix
+your-terminal> git branch
+  bugfix
+* master
+```
+
+`Branch 삭제` 명령어   
+단, 현재 위치의 Branch 는 삭제 불가능하며, 타 Branch 로 이동 후 해당 Branch 삭제 가능
+
+> git branch -d bugfix
+
+`bugfix` Branch 를 삭제
+
+```sh
+> git branch -d bugfix
+Deleted branch bugfix (was c3667ae).
+> git branch
+  master
+* temp
+```
+
+**checkout**
+
+`Branch 이동` 명령어
+
+> git checkout <your-git-branch>
+
+`bugfix` Branch 로 이동
+
+```sh
+your-terminal> git checkout bugfix
+Switched to branch 'bugfix'
+your-terminal> git branch
+* bugfix
+  master
+```
+
+`Branch 생성 후 생성된 Branch 로 이동` 복합 명령어
+
+> git checkout -b <your-new-git-branch>
+
+`temp` Branch 생성과 동시에 `temp` Branch 로 이동
+
+```sh
+your-terminal> git checkout -b temp
+Switched to a new branch 'temp'
+your-terminal> git branch
+  bugfix
+  master
+* temp
+```
+
+**fetch**
+
+`LOCAL REPOSITORY` 를 `REMOTE REPOSITORY` 의 최신 리소스로 변경하는 명령어
+
+> git fetch
+
+```sh
+your-terminal> git fetch
+```
+
+**merge**
+
+새로운 리소스를 사용 [Git step 3](#git-step-3) 과 [Git step 4](#git-step-4) 작업을 반복
+
+Branch 와 Branch 간의 리소스를 병합하는 명령어    
+현재 위치의 Branch 에다가 {your-branch-name} 의 변경 사항을 반영
+
+> git merge {your-branch-name}
+
+병합 기준 Branch `master` 로 이동 후, 병합 대상 Branch `temp` 를 지정하여 병합   
+단, 반드시 병합 기준 Branch 가 `master` 여야하는 것은 아니며 상호 병합 기준과 대상을 사용자가 결정하여 작업
+
+```sh
+your-terminal> ls
+helloworld.html
+your-terminal> git checkout master
+Switched to branch 'master'
+your-terminal> git merge temp
+Updating c3667ae..4b260a0
+Fast-forward
+ byeworld.html | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+ create mode 100644 byeworld.html
+ your-terminal> ls -al
+ byeworld.html	helloworld.html
+```
+
+**pull**
+
+`LOCAL REPOSITORY` 를 `REMOTE REPOSITORY` 의 최신 리소스로 변경 (git fetch) 하고 또한 `WORKSPACE` 와 병합 (git merge) 하는 복합 명령어
+정확하게 동일한 행위를 하지는 않지만 `git fetch` + `git merge` 명령어가 조합된 명령어라 이해할 수도 있음
+
+> git pull
+
+```sh
+your-terminal> git pull
+```
+
+**clone**
+
+`WORKSPACE` 를 `LOCAL REPOSITORY` 로 지정 (git remote add) 하고 `LOCAL REPOSITORY` 를 `REMOTE REPOSITORY` 의 최신 리소스로 변경 (git fetch) 및 `WORKSPACE` 와 병합 (git merge) 하는 복합 명령어    
+정확하게 동일한 행위를 하지는 않지만 `git remote add` + `git pull` 명령어가 조합된 명령어라 이해할 수도 있음    
+{your-github-remote-repository-url} 는 GitHub 사이트의 `REMOTE REPOSITORY` 웹 사이트 URL 주소에 `.git` 을 접미에 붙인 주소
+
+> git clone {your-github-remote-repository-url}.git
+
+```sh
+> git clone https://github.com/warumono-for-develop/hello-world.git
+```
+
+**grep**
+
+리소스 내용 중 {your-search-keyword} 를 포함한 리소스와 해당 내용을 찾는 명령어
+
+> git grep "{your-search-keyword}"
+
+```sh
+your-terminal> git grep "world"
+byeworld.html:<title>byeworld</title>
+helloworld.html:<title>helloworld</title>
+```
+
+**reset**
+
+`LOCAL REPOSITORY` 의 commit 을 취소하는 명령어
+
+> git reset
+
+```sh
+git reset -soft HEAD ^
+```
+
+**log**
+
+git 작업 이력 전체를 확인하는 명령어
+
+> git logs
+
+```sh
+> git logs
+git: 'logs' is not a git command. See 'git --help'.
+
+The most similar command is
+	log
+warumonoui-MacBookAir:HelloWorld warumono$ git log
+commit 4b260a0119d1f4420e6f6cdddefe40d216fd872e (HEAD -> master, temp)
+Author: warumono <warumono@warumonoui-MacBookAir.local>
+Date:   Thu Mar 5 18:11:24 2020 +0900
+
+    create a html
+
+commit c3667aefa87f8a60a766435f0e04c120e6b37a1d
+Author: warumono <warumono@warumonoui-MacBookAir.local>
+Date:   Thu Mar 5 17:47:56 2020 +0900
+
+    first commit
+```
+
+git 작업 이력 전체가 무수히 많을 경우, 사용자가 지정한 갯수만큼의 작업 이력만 확인 가능
+
+> git log -n {your-git-log-count}
+
+```sh
+> git log -n 1
+commit 4b260a0119d1f4420e6f6cdddefe40d216fd872e (HEAD -> master, temp)
+Author: warumono <warumono@warumonoui-MacBookAir.local>
+Date:   Thu Mar 5 18:11:24 2020 +0900
+
+    create a html
+```
+
+---
+</details>
+
 
 
 ## Contact
