@@ -196,14 +196,15 @@ warumono/spring-boot-restful-api-server
 또는, Docker 빌드 진행을 하였는데 `{your-application-docker-repository} Dashboard` 화면에서 `Recent builds` 영역에 `Repository never built. Click here to set up builds.` 문구가 나오는 것은 **비정상**
 
 먼저 프로젝트 리소스 를 Github 으로 push 하면 Github repository 첫 화면에 나타나는 두 가지의 파일 구조가 있음    
-Case 1 과 Case 2 의 프로젝트는 \<your-project-folder\> 프로젝트 이름을 갖는 동일한 프로젝트
+Case 1 과 Case 2 의 프로젝트는 \<your-project-folder\> 프로젝트 이름을 갖는 동일한 프로젝트    
+*Spring Boot 프로젝트를 기반으로 GitHub repository 에 push 했을 경우의 구조이므로 타 언어 또는 framework 등의 환경에 따라 다른 구조를 갖음*
 
 ### Case 1
 
-Github repository 파일 구조가 `프로젝트 폴더` 인 경우   
-*`프로젝트 폴더` 란 작성자가 임의로 지정한 이름으로 프로젝트 생성 시 **프로젝트 이름으로 생성되는 폴더**를 말하며 이 폴더내에 소스 파일 및 폴더 등이 존재*
+Github repository 파일 구조가 `Folder whole` 인 경우   
+*`Folder whole` 이란 작성자가 임의로 지정한 이름으로, `폴더 통째로 push 되어 있는 구조` 즉, 프로젝트 생성 시 **프로젝트 이름으로 생성되는 폴더 형태로 GitHub repository 에 push 되어 있는 구조**를 말하며 이 폴더내에 소스 파일 및 폴더 등이 존재*
 
-`프로젝트 폴더` 를 Github repository 파일 구조로 도식화
+`Folder whole` Github repository 파일 구조 도식화
 
 ```
 \<your-project-folder\>
@@ -214,15 +215,15 @@ README.md
 
 ### Case 2
 
-Github repository 파일 구조가 `리소스` 인 경우   
-*`리소스` 란 작성자가 임의로 지정한 이름으로 **`프로젝트 폴더` 내에 존재하는 소스 파일 및 폴더 등***
+Github repository 파일 구조가 `Resource parts` 인 경우   
+*`Resource parts` 란 작성자가 임의로 지정한 이름으로, `폴더내 리소스로 push 되어 있는 구조` 즉, 프로젝트 생성 시 **프로젝트 이름으로 생성되는 폴더 내에 존재하는 소스 파일 및 폴더 등이 GitHub repository 에 push 되어 있는 구조*** 
 
-`리소스` 를 Github repository 파일 구조로 도식화
+`Resource parts` Github repository 파일 구조 도식화
 
 ```
-binFolder
-gradle/wrapperFolder
-srcFolder
+bin
+gradle/wrapper
+src
 .gitignore
 ...
 Dockerfile
@@ -256,6 +257,43 @@ README.md
 >> Build Context       /{your-project-folder}/
 >> Build Caching       ON
 ```
+
+### How to push as `Folder whole`
+
+작성자의 경우, [STS](https://spring.io/tools) (Spring Tool Suite 4-4.4.1) 를 사용하여 프로젝트를 생성하였고, 해당 IDE 의 플러그인 [EGit](https://www.eclipse.org/egit/) 을 설치하여 GitHub 으로 형상 관리    
+
+STS 내에서 EGit 을 사용 GitHub 으로 Shre Project 하여 push 하면 `Folder whole` 구조로 형성됨
+
+### How to push as `Resource parts`
+
+**로컬 Terminal 을 사용 Git 명령어로 GitHub 으로 push 하면 `Resource parts` 구조로 형성됨**
+
+#### Stpe 1. Push Local to GitHub
+> cd {your-project-folder}    
+> git init    
+> git add .   
+> git commit -m "{your-commit-message}"   
+> git remote add origin {your-github-repository-clone-with-https-url}   
+> git push origin master
+
+```sh
+your-terminal> cd ~/Develop/Java/Workspace/SringBootRESTFulApiServerTemplate
+your-terminal> git init
+your-terminal> git add .
+your-terminal> git commit -m "first commit"
+your-terminal> git remote add origin https://github.com/warumono-for-develop/spring-boot-restful-api-server-template.git
+your-terminal> git push origin master
+```
+
+#### Stpe 1. Import GitHub to Local
+**In STS IDE**
+
+> Select the `import` in navigator popup menu   
+> Select the `Git` > `Projects from Git` in menu and then `Next`    
+> Select the `Existing local repository` in menu and then `Next`    
+> Click the `Add..` button and then select a `git repository in Local` and then `Next`    
+> Select the `Import existing Eclipse projects` and then `Next`   
+> Type `{your-project-name}` and then `Finish`
 
 ---
 </details>
